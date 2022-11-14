@@ -1,6 +1,7 @@
 import pygame
 from game import objects
 from game import ennemy
+import tiles as tilespy
 
 class World():
     def __init__(self, world_data, tile_size, screen):
@@ -9,43 +10,18 @@ class World():
         self.tile_size = tile_size
         self.screen = screen
         self.coin_counter = 0
+        self.tiles = tilespy.load_tiles()
 
-        self.obj = []
-        self.obj.append((pygame.image.load("img\coin\Coin-1.png.png"), "obj/1"))
-        self.obj.append((pygame.image.load("img\SlimeAnimations/Slime.png"), "obj/2"))
-        self.obj.append((pygame.image.load("img/transparent.png"), "obj/3"))
-        self.img = []
-        self.img.append((pygame.image.load("img\PNG Grass\grassHalf.png"), "grass/1"))
-        self.img.append((pygame.image.load("img\PNG Grass\grassHalfLeft.png"), "grass/2"))
-        self.img.append((pygame.image.load("img\PNG Grass\grassHalfMid.png"), "grass/3"))
-        self.img.append((pygame.image.load("img\PNG Grass\grassHalfRight.png"), "grass/4"))
-        num = 5
-        for i in range(1, 37):
-            if i >= 1 and i <= 7 or i >= 12:
-                if i < 10:
-                    i = "0"+str(i)
-                self.img.append((pygame.image.load(f"img\PNG Grass\slice{str(i)}_{str(i)}.png"), f"grass/{num}"))
-                num += 1
-        self.img1 = []
-        self.img1.append((pygame.image.load("img\PNG Sand\sandHalf.png"), "sand/1"))
-        self.img1.append((pygame.image.load("img\PNG Sand\sandHalfLeft.png"), "sand/2"))
-        self.img1.append((pygame.image.load("img\PNG Sand\sandHalfMid.png"), "sand/3"))
-        self.img1.append((pygame.image.load("img\PNG Sand\sandHalfRight.png"), "sand/4"))
-        num = 5
-        for i in range(1, 37):
-            if i >= 1 and i <= 7 or i >= 12:
-                if i < 10:
-                    i = "0"+str(i)
-                self.img1.append((pygame.image.load(f"img\PNG Sand\slice{str(i)}_{str(i)}.png"), f"sand/{num}"))
-                num += 1
+        obj = self.tiles.get_tiles("obj")
+        tiles = [obj]
+        for tile_name in self.tiles.all_tiles_name:
+            tiles.append(self.tiles.get_tiles(tile_name))
 
         self.all_tiles = {}
-        for i in range(0, len(self.obj)):
-            self.all_tiles[self.obj[i][1]] = self.obj[i][0]
-        for i in range(0, len(self.img)):
-            self.all_tiles[self.img[i][1]] = self.img[i][0]
-        for i in range(0, len(self.img1)):
-            self.all_tiles[self.img1[i][1]] = self.img1[i][0]
+        for i in range(0, len(tiles)):
+            for i2 in range(0, len(tiles[i])):
+                print(tiles[i][1])
+                self.all_tiles[tiles[i][i2][1]] = tiles[i][i2][0]
 
         #load groups
         self.coin_group = pygame.sprite.Group()

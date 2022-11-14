@@ -21,9 +21,11 @@ class load_tiles():
             tile.append([pygame.image.load(f"img\PNG {tiles_name}\{tiles_name}HalfRight.png"), f"{tiles_name}/4"])
             num = 5
             for i in range(1, 37):
-                if i >= 1 and i <= 7 or i >= 12:
+                #if i >= 1 and i <= 7 or i >= 12:
+                try:
                     if i < 10:
                         i = "0"+str(i)
                     tile.append([pygame.image.load(f"img\PNG {tiles_name}\slice{str(i)}_{str(i)}.png"), f"{tiles_name}/{num}"])
                     num += 1
+                except:pass
             return tile
