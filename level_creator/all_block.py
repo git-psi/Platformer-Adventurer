@@ -1,10 +1,14 @@
 import pygame
+import tiles as tilespy
 
 class AllBlock():
     def __init__(self, screen):
+        self.tiles = tilespy.load_tiles()
         self.screen = screen
         self.tile_size = 45
-        self.column = [self.obj, self.img, self.img1, self.img, self.img1, self.img]
+        self.column = [self.tiles.get_tiles("obj")]
+        for tile_name in self.tiles.all_tiles_name:
+            self.column.append(self.tiles.get_tiles(tile_name))
         for column in range(0, len(self.column)):
             for block in range(0, len(self.column[column])):
                 self.column[column][block][0] = pygame.transform.scale(self.column[column][block][0], (self.tile_size, self.tile_size))
