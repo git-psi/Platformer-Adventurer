@@ -119,7 +119,7 @@ class Player():
         self.text_animation = text_animation.TextAnimation(self.screen)
         self.alive = True
 
-    def update(self, x_sup = 0, y_sup = 0, max_x_player = 1200, cheat = 0, fps = 30, slimes = pygame.sprite.Group):
+    def update(self, x_sup = 0, y_sup = 0, max_x_player = 1200, cheat = 0, fps = 30, slimes = pygame.sprite.Group, in_dialog = False):
         dx = 0
         dy = 0
         walk_cooldown = 2
@@ -134,28 +134,28 @@ class Player():
         if self.alive == True:
             #get keypresses
             key = pygame.key.get_pressed()
-            if key[pygame.K_SPACE] and self.jumped == False and self.in_air == False and not self.animation == 4:
+            if key[pygame.K_SPACE] and self.jumped == False and self.in_air == False and not self.animation == 4 and not in_dialog:
                 self.vel_y = -15
                 self.jumped = True
 
             if key[pygame.K_SPACE] == False:
                 self.jumped = False
 
-            if key[pygame.K_LEFT] and not self.animation == 4 and not key[pygame.K_RIGHT]:
+            if key[pygame.K_LEFT] and not self.animation == 4 and not key[pygame.K_RIGHT] and not in_dialog:
                 dx -= 10
                 self.counter += 1
                 self.direction = -1
                 if self.animation == 2:
                     self.animation = 0
                 left = True
-            if key[pygame.K_RIGHT] and not self.animation == 4 and not key[pygame.K_LEFT]:
+            if key[pygame.K_RIGHT] and not self.animation == 4 and not key[pygame.K_LEFT] and not in_dialog:
                 dx += 10
                 self.counter += 1
                 self.direction = 1
                 if self.animation == 2:
                     self.animation = 0
                 right = True
-            if key[pygame.K_LEFT] == False and key[pygame.K_RIGHT] == False or key[pygame.K_LEFT] and key[pygame.K_RIGHT]:
+            if key[pygame.K_LEFT] == False and key[pygame.K_RIGHT] == False or key[pygame.K_LEFT] and key[pygame.K_RIGHT] or in_dialog:
                 left = False
                 right = False
                 if self.animation == 0: self.counter = 0
@@ -168,7 +168,7 @@ class Player():
                 if self.in_air == False and not self.animation == 1 and not self.animation == 3 and not self.animation == 4:
                     self.counter_idle += 1
                     self.animation = 2
-            if key[pygame.K_RETURN] and not self.animation == 4 and self.attack_possibility == True:
+            if key[pygame.K_RETURN] and not self.animation == 4 and self.attack_possibility == True and not in_dialog:
                 self.animation = 4
                 self.attack_restant -= 1
                 if self.attack_restant == 0:

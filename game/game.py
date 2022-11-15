@@ -63,6 +63,8 @@ def start():
 
 world_data, world, tiles, player, max_x_player, text_animation, game_over = start()
 
+in_dialog = False
+
 run = True
 while run:
     clock.tick(fps)
@@ -71,7 +73,7 @@ while run:
 
     world.calculate_tile()
 
-    world.draw(x_world, y_world, cheat=cheat, glitch_mode = cheat, player_alive = player.alive)
+    world.draw(x_world, y_world, cheat=cheat, glitch_mode = cheat, player_alive = player.alive, in_dialog = False)
 
     #draw box
     draw_box(10, 10, 190, 75)
@@ -88,7 +90,7 @@ while run:
     life = font.render(f"Life : {player.life}/{player.life_total}", True, [255, 255, 255])
     screen.blit(life, (25, 55))
 
-    x_world, y_world = player.update(x_world, y_world, max_x_player, cheat, str(round(clock.get_fps(), 2)), world.slime_group)
+    x_world, y_world = player.update(x_world, y_world, max_x_player, cheat, str(round(clock.get_fps(), 2)), world.slime_group, in_dialog)
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -103,7 +105,11 @@ while run:
         text_animation.add_coin(player.rect.x, player.rect.y)
 
     for pnj in world.pnj_group:
-        pnj.player_collide(x_world, player.rect)
+        if pnj.player_collide(x_world, pygame.Rect(player.rect.x + x_world + 30, player.rect.y + y_world + 10, player.width, player.height), cheat):
+            in_dialog = pnj
+
+    if not in_dialog == False:
+        print(1)
     
     if player.alive == False or player.alive < 60 and player.alive != True:
         response = game_over.update()

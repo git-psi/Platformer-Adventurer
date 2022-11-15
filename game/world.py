@@ -110,7 +110,7 @@ class World():
                 max_x_player += 50
         return max_x_player
 
-    def draw(self, x_sup = 0, y_sup = 0, cheat = 0, glitch_mode = False, player_alive = True):
+    def draw(self, x_sup = 0, y_sup = 0, cheat = 0, glitch_mode = False, player_alive = True, in_dialog = False):
         for tile in self.tiles:
             tile[1].x = tile[1].x + x_sup
             tile[1].y = tile[1].y + y_sup
@@ -125,21 +125,23 @@ class World():
                 self.screen.blit(tile[0], tile[1])
 
         #draw objects
-        self.coin_counter += 1
-        if self.coin_counter == 5:
-            self.coin_group.update()
-            self.coin_counter = 0
-        for coin in self.coin_group:
-            self.screen.blit(coin.image, ((coin.rect.x + x_sup), (coin.rect.y + y_sup)))
-            if not player_alive == True:
-                self.coin_group.remove(coin)
+        if not in_dialog:
+            self.coin_counter += 1
+            if self.coin_counter == 5:
+                self.coin_group.update()
+                self.coin_counter = 0
+            for coin in self.coin_group:
+                self.screen.blit(coin.image, ((coin.rect.x + x_sup), (coin.rect.y + y_sup)))
+                if not player_alive == True:
+                    self.coin_group.remove(coin)
 
-        self.slime_group.update(self.transparent_tiles, x_sup, y_sup, cheat)
+            self.slime_group.update(self.transparent_tiles, x_sup, y_sup, cheat)
 
-        for slime in self.slime_group:
-            alive = slime.alive()
-            if alive or not player_alive == True:
-                self.slime_group.remove(slime)
+            for slime in self.slime_group:
+                alive = slime.alive()
+                if alive or not player_alive == True:
+                    self.slime_group.remove(slime)
+        else: print("NOPE")
 
         self.pnj_group.update(x_sup)
         
