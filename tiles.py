@@ -7,6 +7,7 @@ class load_tiles():
         self.obj.append([pygame.image.load("img\coin\Coin-1.png.png"), "obj/1"])
         self.obj.append([pygame.image.load("img\SlimeAnimations/Slime.png"), "obj/2"])
         self.obj.append([pygame.image.load("img/transparent.png"), "obj/3"])
+        self.obj.append([pygame.image.load("img/"), "obj/4"])
 
         self.all_tiles_name = ["grass", "sand", "cake", "castle", "choco", "dirt", "metal", "purple", "sand", "snow", "tundra"]
 
