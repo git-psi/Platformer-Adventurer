@@ -51,6 +51,7 @@ def start():
 
     world.calculate_coin()
     world.calculate_ennemy()
+    world.calculate_pnj()
     max_x_player = world.max_x_player() - 600
 
 

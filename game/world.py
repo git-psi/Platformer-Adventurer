@@ -2,6 +2,7 @@ import pygame
 from game import objects
 from game import ennemy
 import tiles as tilespy
+from game import pnj as pnjpy
 
 class World():
     def __init__(self, world_data, tile_size, screen):
@@ -25,6 +26,7 @@ class World():
         #load groups
         self.coin_group = pygame.sprite.Group()
         self.slime_group = pygame.sprite.Group()
+        self.pnj_group = pygame.sprite.Group()
 
     def def_player(self, player):
         self.player = player
@@ -84,6 +86,18 @@ class World():
                 col_count += 1
             row_count += 1
 
+    def calculate_pnj(self):
+        self.pnj_group.empty()
+        row_count = 0
+        for row in self.world_data:
+            col_count = 0
+            for tile in row:
+                if tile == "obj/4":
+                    pnj = pnjpy.Pnj(self.screen, col_count * self.tile_size + self.tile_size // 2, row_count * self.tile_size - 25, "merchant", "medieval")
+                    self.pnj_group.add(pnj)
+                col_count += 1
+            row_count += 1
+
     def max_x_player(self):
         world_data_file = open("world_data", "r")
         world_data_file = world_data_file.read()
@@ -126,6 +140,8 @@ class World():
             alive = slime.alive()
             if alive or not player_alive == True:
                 self.slime_group.remove(slime)
+
+        self.pnj_group.update(x_sup)
         
 
 def world_data_function():

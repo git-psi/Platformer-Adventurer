@@ -165,6 +165,7 @@ change_possiblity_num = 0
 
 world.calculate_coin()
 world.calculate_ennemy()
+world.calculate_pnj()
 
 block = False
 clickable_block = False
@@ -200,6 +201,8 @@ while run:
                     world.calculate_coin()
                 if str(tile_num) == "obj/2":
                     world.calculate_ennemy()
+                if tile_num == "obj/4":
+                    world.calculate_pnj()
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 3 and not block:
             mouse = pygame.mouse.get_pos()
             x = (mouse[0] // tile_size)
@@ -211,6 +214,7 @@ while run:
                 if str(tile_num) == "obj/1":
                     world.calculate_coin()
                 world.calculate_ennemy()
+                world.calculate_pnj()
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 5 and block:
             all_block_sup -= 80
             if all_block_sup < -1500:
