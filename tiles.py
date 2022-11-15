@@ -15,10 +15,10 @@ class load_tiles():
             return self.obj
         else:
             tile = []
-            tile.append([pygame.image.load(f"img\PNG {tiles_name}\{tiles_name}Half.png"), f"{tiles_name}/1"])
-            tile.append([pygame.image.load(f"img\PNG {tiles_name}\{tiles_name}HalfLeft.png"), f"{tiles_name}/2"])
-            tile.append([pygame.image.load(f"img\PNG {tiles_name}\{tiles_name}HalfMid.png"), f"{tiles_name}/3"])
-            tile.append([pygame.image.load(f"img\PNG {tiles_name}\{tiles_name}HalfRight.png"), f"{tiles_name}/4"])
+            tile.append([pygame.image.load(f"img\PNG {tiles_name}\{tiles_name}Half.png"), f"{tiles_name}/1/half"])
+            tile.append([pygame.image.load(f"img\PNG {tiles_name}\{tiles_name}HalfLeft.png"), f"{tiles_name}/2/half"])
+            tile.append([pygame.image.load(f"img\PNG {tiles_name}\{tiles_name}HalfMid.png"), f"{tiles_name}/3/half"])
+            tile.append([pygame.image.load(f"img\PNG {tiles_name}\{tiles_name}HalfRight.png"), f"{tiles_name}/4/half"])
             num = 5
             for i in range(1, 37):
                 #if i >= 1 and i <= 7 or i >= 12:

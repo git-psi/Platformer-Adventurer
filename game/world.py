@@ -20,7 +20,6 @@ class World():
         self.all_tiles = {}
         for i in range(0, len(tiles)):
             for i2 in range(0, len(tiles[i])):
-                print(tiles[i][1])
                 self.all_tiles[tiles[i][i2][1]] = tiles[i][i2][0]
 
         #load groups
@@ -41,6 +40,8 @@ class World():
                     if not tile == "obj/1" and not tile == "obj/2" and not tile == "obj/3":
                         img = pygame.transform.scale(self.all_tiles[tile], (self.tile_size, self.tile_size))
                         img_rect = img.get_rect()
+                        if "half" in tile:
+                            img_rect.height -= self.tile_size // 2 - 5
                         img_rect.x = col_count * self.tile_size
                         img_rect.y = row_count * self.tile_size
                         tile = (img, img_rect)
