@@ -37,7 +37,7 @@ class World():
             col_count = 0
             for tile in row:
                 try:
-                    if not tile == "obj/1" and not tile == "obj/2" and not tile == "obj/3":
+                    if not "obj" in tile:
                         img = pygame.transform.scale(self.all_tiles[tile], (self.tile_size, self.tile_size))
                         img_rect = img.get_rect()
                         if "half" in tile:
