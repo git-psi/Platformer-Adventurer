@@ -30,3 +30,9 @@ class Pnj(pygame.sprite.Sprite):
         rect.x += x_sup
 
         self.screen.blit(self.pnj_img, rect)
+
+    def player_collide(self, x_sup, player_rect):
+        rect = copy.deepcopy(self.rect)
+        rect.x += x_sup - 30
+        rect.width += 60
+        pygame.draw.rect(self.screen, (0, 0, 0), rect, 5)

@@ -2,6 +2,8 @@ import pygame
 from pygame.locals import *
 from game import world as world_py
 from level_creator import all_block as all_blockpy
+from tkinter import *
+from tkinter import messagebox
 
 pygame.init()
 
@@ -18,6 +20,7 @@ number_of_line_base = 14
 number_of_column_base = 24
 
 screen = pygame.display.set_mode(screen_size)
+Tk().wm_withdraw()
 
 #load images
 background_img = pygame.image.load("img/background.png")
@@ -139,10 +142,9 @@ def add_line():
     for line in world_data:
         line.append(0)
 
-number_of_line = 0
+number_of_line = 14
 for line in open("world_data"):
     number_of_column = 0
-    number_of_line += 1
     num_of_column = line.split("|")
     for column in num_of_column:
         number_of_column += 1
@@ -195,7 +197,7 @@ while run:
             y = (mouse[1] // tile_size)
             x += (x_sup // tile_size) * -1
             y += (y_sup // tile_size) * -1
-            if x <= number_of_column and y <= number_of_line and mouse[1] < 700:
+            if x <= number_of_column and y < number_of_line and mouse[1] < 700:
                 world_data[y][x] = str(tile_num)
                 if str(tile_num) == "obj/1":
                     world.calculate_coin()
@@ -209,10 +211,9 @@ while run:
             y = (mouse[1] // tile_size)
             x += (x_sup // tile_size) * -1
             y += (y_sup // tile_size) * -1
-            if x <= number_of_column and y <= number_of_line:
+            if x <= number_of_column and y < number_of_line:
                 world_data[y][x] = 0
-                if str(tile_num) == "obj/1":
-                    world.calculate_coin()
+                world.calculate_coin()
                 world.calculate_ennemy()
                 world.calculate_pnj()
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 5 and block:
@@ -249,18 +250,20 @@ while run:
     menu_response =  draw_menu()
 
     if menu_response == "Restart":
-        world_data = world_py.world_data_function()
-        world = world_py.World(world_data, tile_size, screen)
-        number_of_line = number_of_line_base
-        number_of_column = number_of_column_base
+        if messagebox.askokcancel("Validation", "Are you sure you want to start over ?"):
+            world_data = world_py.world_data_function()
+            world = world_py.World(world_data, tile_size, screen)
+            number_of_line = number_of_line_base
+            number_of_column = number_of_column_base
     elif menu_response == "Save":
         save_data(world_data)
     elif menu_response == "block":
         clickable_block = False
         block = True
     elif menu_response == "play":
+        if messagebox.askyesno("Save", "Do you want to save ?"):
+            save_data(world_data)
         run = False
-        save_data(world_data)
         from game import game
 
     pygame.display.update()

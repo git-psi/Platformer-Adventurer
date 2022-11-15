@@ -102,6 +102,8 @@ while run:
         score += 1
         text_animation.add_coin(player.rect.x, player.rect.y)
 
+    for pnj in world.pnj_group:
+        pnj.player_collide(x_world, player.rect)
     
     if player.alive == False or player.alive < 60 and player.alive != True:
         response = game_over.update()
