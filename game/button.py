@@ -41,3 +41,20 @@ class Button():
         #pygame.draw.rect(self.screen, (255, 0, 0), rect_pos, 4)
 
         return action
+
+    def collide(self, x, y):
+        rect = self.image.get_rect()
+        rect.center = (x, y-10)
+        text_rect = self.text.get_rect()
+        text_rect.center = (x, y)
+
+        #get mouse position
+        pos = pygame.mouse.get_pos()
+
+        #check mouseover and clicked conditions
+        rect_pos = copy.deepcopy(rect)
+        rect_pos.height -= 110 + self.sup_size
+        rect_pos.center = (x, y)
+        if rect_pos.collidepoint(pos):
+            return True
+        else: return False

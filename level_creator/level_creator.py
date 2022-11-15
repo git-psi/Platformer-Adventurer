@@ -158,7 +158,7 @@ play_button = Button((1200 // (number_of_buttons + 1)) * 4, 750, button_img, "Pl
 
 all_block = all_blockpy.AllBlock(screen)
 
-tile_num = 1
+tile_num = "0"
 
 change_possiblity = True
 change_possiblity_num = 0
@@ -237,7 +237,7 @@ while run:
             clickable_block = True
         if pygame.mouse.get_pressed()[0] and clickable_block:
             mouse_clicked = True
-        response = all_block.choose_block(all_block_sup, mouse_clicked)
+        response = all_block.choose_block(all_block_sup, mouse_clicked, tile_num)
         if not response == False:
             block = False
             tile_num = response
@@ -257,7 +257,6 @@ while run:
     elif menu_response == "play":
         run = False
         save_data(world_data)
-        pygame.quit()
         from game import game
 
     pygame.display.update()
