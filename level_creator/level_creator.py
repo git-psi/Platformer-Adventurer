@@ -256,6 +256,7 @@ while run:
         block = True
     elif menu_response == "play":
         run = False
+        save_data(world_data)
         pygame.quit()
         from game import game
 
