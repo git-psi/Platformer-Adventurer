@@ -1,5 +1,6 @@
 import pygame
 import copy
+from game import dialog as dialogpy
 
 class Pnj(pygame.sprite.Sprite):
     def __init__(self, screen, x, y, name, category_name):
@@ -17,6 +18,7 @@ class Pnj(pygame.sprite.Sprite):
         self.rect = self.pnj_img.get_rect()
         self.rect.centerx = x
         self.rect.y = y
+        self.dialogclass = dialogpy.Dialog(screen)
     
     def update(self, x_sup):
         self.counter += 1
@@ -43,3 +45,6 @@ class Pnj(pygame.sprite.Sprite):
                 return True
 
         return False
+
+    def dialog(self):
+        self.dialogclass.update()

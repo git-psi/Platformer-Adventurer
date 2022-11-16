@@ -73,7 +73,7 @@ while run:
 
     world.calculate_tile()
 
-    world.draw(x_world, y_world, cheat=cheat, glitch_mode = cheat, player_alive = player.alive, in_dialog = False)
+    world.draw(x_world, y_world, cheat=cheat, glitch_mode = cheat, player_alive = player.alive, in_dialog=in_dialog)
 
     #draw box
     draw_box(10, 10, 190, 75)
@@ -109,7 +109,7 @@ while run:
             in_dialog = pnj
 
     if not in_dialog == False:
-        print(1)
+        pnj.dialog()
     
     if player.alive == False or player.alive < 60 and player.alive != True:
         response = game_over.update()

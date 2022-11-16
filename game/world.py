@@ -141,7 +141,6 @@ class World():
                 alive = slime.alive()
                 if alive or not player_alive == True:
                     self.slime_group.remove(slime)
-        else: print("NOPE")
 
         self.pnj_group.update(x_sup)
         
