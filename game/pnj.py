@@ -33,7 +33,7 @@ class Pnj(pygame.sprite.Sprite):
 
         self.screen.blit(self.pnj_img, rect)
 
-    def player_collide(self, x_sup, player_rect, cheat):
+    def player_collide(self, x_sup, player_rect, cheat, key):
         rect = copy.deepcopy(self.rect)
         rect.x += x_sup - 30
         rect.width += 60
@@ -41,10 +41,13 @@ class Pnj(pygame.sprite.Sprite):
             pygame.draw.rect(self.screen, (0, 0, 0), rect, 2)
 
         if player_rect.colliderect(rect):
-            if pygame.key.get_pressed()[pygame.K_RETURN]:
+            if key == True:
                 return True
-
         return False
 
-    def dialog(self):
-        self.dialogclass.update()
+    def dialog(self, key, buy = False):
+        response = self.dialogclass.update(key, buy)
+        return response
+
+    def restart_dialog(self):
+        pass

@@ -2,12 +2,15 @@ import pygame
 import copy
 
 class Button():
-    def __init__(self, screen, text, sup_size = 0):
-        self.font = pygame.font.Font("font/dogica.ttf", 15)
+    def __init__(self, screen, text, sup_size = 0, font = False):
         self.image = pygame.image.load("img/button.png")
         self.image = pygame.transform.scale(self.image, (150 + sup_size, 150 + sup_size))
         self.clicked = False
-        self.text = self.font.render(text, True, (255, 255, 255))
+
+        if not font:
+            font = pygame.font.Font("font/dogica.ttf", 15)
+        
+        self.text = font.render(text, True, (255, 255, 255))
         self.screen = screen
         self.sup_size = sup_size
 

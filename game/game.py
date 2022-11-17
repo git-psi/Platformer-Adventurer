@@ -4,6 +4,7 @@ from game import world as worldpy
 from game import player as playerpy
 from game import text_animation as txtpy
 from game import game_over as game_overpy
+from game import buy as buypy
 
 pygame.init()
 
@@ -63,6 +64,8 @@ def start():
 
 world_data, world, tiles, player, max_x_player, text_animation, game_over = start()
 
+buy = buypy.Buy(screen, player)
+
 in_dialog = False
 
 run = True
@@ -76,7 +79,7 @@ while run:
     world.draw(x_world, y_world, cheat=cheat, glitch_mode = cheat, player_alive = player.alive, in_dialog=in_dialog)
 
     #draw box
-    draw_box(10, 10, 190, 75)
+    draw_box(10, 10, 190, 103)
 
     #update text
     text_animation.update(x_world, y_world)
@@ -85,6 +88,10 @@ while run:
     screen.blit(coin, (20, 20))
     score_text = font.render(f" x {str(score)}", True, [255, 255, 255])
     screen.blit(score_text, (50, 27))
+
+    #draw player strength
+    strength_text = font.render(f"Strenght : {player.dammage}", True, [255, 255, 255])
+    screen.blit(strength_text, (25, 83))
 
     #draw life
     life = font.render(f"Life : {player.life}/{player.life_total}", True, [255, 255, 255])
@@ -99,17 +106,29 @@ while run:
             if cheat == 0:
                 cheat = 1
             else: cheat = 0
+    if pygame.key.get_pressed()[K_RETURN]:
+        if return_key == True or return_key == "pressed":
+            return_key = "pressed"
+        else:
+            return_key = True
+    else:
+        return_key = False
 
     if pygame.sprite.spritecollide(player, world.coin_group, True):
         score += 1
         text_animation.add_coin(player.rect.x, player.rect.y)
 
     for pnj in world.pnj_group:
-        if pnj.player_collide(x_world, pygame.Rect(player.rect.x + x_world + 30, player.rect.y + y_world + 10, player.width, player.height), cheat):
+        if pnj.player_collide(x_world, pygame.Rect(player.rect.x + x_world + 30, player.rect.y + y_world + 10, player.width, player.height), cheat, return_key):
             in_dialog = pnj
 
     if not in_dialog == False:
-        pnj.dialog()
+        response = pnj.dialog(return_key)
+        if response == False:
+            in_dialog = False
+        if response == "buy":
+            if buy.draw(score):
+                pnj.dialog(return_key, True)
     
     if player.alive == False or player.alive < 60 and player.alive != True:
         response = game_over.update()

@@ -1,8 +1,9 @@
 import pygame
-from game import world
-from game import button
 
 pygame.init()
+
+from game import world
+from game import button
 
 clock = pygame.time.Clock()
 fps = 30

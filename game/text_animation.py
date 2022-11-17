@@ -13,6 +13,7 @@ class TextAnimation():
     def add_dammage(self, x, y, dammage):
         self.dammage.append([x, y, 10, dammage])
 
+
     def update(self, x_sup, y_sup):
         remove_i = 0
         for i in range(0, len(self.coin)):

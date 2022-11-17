@@ -273,7 +273,7 @@ class Player():
             dy += self.vel_y
 
             #check for collision with slime
-            if not self.immunity_counter:
+            if not self.immunity_counter and not in_dialog:
                 for slime in slimes:
                     slime_rect = pygame.Rect(slime.rect.x + 47 + x_sup, slime.rect.y + 55 + y_sup, slime.width, slime.height)
                     if slime_rect.colliderect(self.rect.x + x_sup + 30, self.rect.y + y_sup + 10, self.width, self.height):
@@ -372,4 +372,7 @@ class Player():
             n = self.immunity_counter // 3
             if not (n % 2) == 0:
                 self.visible = False
-            else: self.visible = True        
+            else: self.visible = True     
+
+    def damage_increase(self, strenght):
+        self.dammage += strenght
