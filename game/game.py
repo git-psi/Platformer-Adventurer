@@ -18,7 +18,8 @@ tile_size = 50
 x_world = 0
 y_world = 0
 cheat = 0
-score = 0
+score = 80
+shield = 0
 
 
 #load images
@@ -78,26 +79,32 @@ while run:
 
     world.draw(x_world, y_world, cheat=cheat, glitch_mode = cheat, player_alive = player.alive, in_dialog=in_dialog)
 
-    #draw box
-    draw_box(10, 10, 190, 103)
+    #draw all info
+    if not in_dialog:
+        #draw box
+        draw_box(10, 10, 190, 131)
 
-    #update text
-    text_animation.update(x_world, y_world)
+        #update text
+        text_animation.update(x_world, y_world)
 
-    #draw score
-    screen.blit(coin, (20, 20))
-    score_text = font.render(f" x {str(score)}", True, [255, 255, 255])
-    screen.blit(score_text, (50, 27))
+        #draw score
+        screen.blit(coin, (20, 20))
+        score_text = font.render(f" x {str(score)}", True, [255, 255, 255])
+        screen.blit(score_text, (50, 27))
 
-    #draw player strength
-    strength_text = font.render(f"Strenght : {player.dammage}", True, [255, 255, 255])
-    screen.blit(strength_text, (25, 83))
+        #draw player strength
+        strength_text = font.render(f"Strenght : {player.dammage}", True, [255, 255, 255])
+        screen.blit(strength_text, (25, 83))
 
-    #draw life
-    life = font.render(f"Life : {player.life}/{player.life_total}", True, [255, 255, 255])
-    screen.blit(life, (25, 55))
+        #draw value of shield
+        shield_text = font.render(f"Shield : {shield}%", True, (255, 255, 255))
+        screen.blit(shield_text, (25, 111))
 
-    x_world, y_world = player.update(x_world, y_world, max_x_player, cheat, str(round(clock.get_fps(), 2)), world.slime_group, in_dialog)
+        #draw life
+        life = font.render(f"Life : {player.life}/{player.life_total}", True, [255, 255, 255])
+        screen.blit(life, (25, 55))
+
+    x_world, y_world = player.update(x_world, y_world, max_x_player, cheat, str(round(clock.get_fps(), 2)), world.slime_group, in_dialog, shield)
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -127,7 +134,9 @@ while run:
         if response == False:
             in_dialog = False
         if response == "buy":
-            if buy.draw(score):
+            info = (f"Sword Strenght : {player.dammage}", f"Shield : -{shield}% of damage")
+            score, shield, response = buy.draw(score, info, shield)
+            if response:
                 pnj.dialog(return_key, True)
     
     if player.alive == False or player.alive < 60 and player.alive != True:

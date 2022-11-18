@@ -118,8 +118,10 @@ class Player():
         self.lifebar = lifebar.Lifebar(self.screen, self.width, self.height, 0, -15, 20, 5)
         self.text_animation = text_animation.TextAnimation(self.screen)
         self.alive = True
+        self.shield = 0
 
-    def update(self, x_sup = 0, y_sup = 0, max_x_player = 1200, cheat = 0, fps = 30, slimes = pygame.sprite.Group, in_dialog = False):
+    def update(self, x_sup = 0, y_sup = 0, max_x_player = 1200, cheat = 0, fps = 30, slimes = pygame.sprite.Group, in_dialog = False, shield = 0):
+        self.shield = shield
         dx = 0
         dy = 0
         walk_cooldown = 2
@@ -357,8 +359,13 @@ class Player():
             
         return x_sup, y_sup
 
-    def take_dammage(self, dammage, counter):
+    def take_dammage(self, dammage : float, counter):
         if not self.immunity_counter and self.alive == True:
+            dammage = float(dammage)
+            print(dammage)
+            dammage = (dammage) * (100 - self.shield)
+            dammage = dammage//100
+            print(dammage)
             self.life_remove += dammage
             self.immunity_counter = counter
             self.text_animation.add_dammage(self.rect.x + 30, self.rect.y, dammage)

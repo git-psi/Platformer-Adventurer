@@ -10,7 +10,7 @@ class Dialog():
         self.dialog_box_rect = self.dialog_box.get_rect()
         self.dialog_box_rect.center = (screen.get_width() // 2, (screen.get_height() // 5) * 1)
         self.s_black = pygame.Surface((screen.get_width(), screen.get_height()))
-        self.s_black.set_alpha(200)
+        self.s_black.set_alpha(230)
         self.s_black.fill((0, 0, 0))
         self.counter = 0
         self.letter_counter = 0
