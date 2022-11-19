@@ -35,10 +35,11 @@ class Buy():
         self.objs.append(self.shield[self.shield_index])
         self.objs.append(self.max_health[self.max_health_index])
         self.objs.append((pygame.transform.scale(pygame.image.load("img\Kyrise's 16x16 RPG Icon Pack - V1.3\icons/48x48\potion_01a.png"), (40, 40)), "Regeneration Of Life : 10%", 10, 10))
+        self.objs.append((pygame.transform.scale(pygame.image.load("img\Kyrise's 16x16 RPG Icon Pack - V1.3\icons/48x48/book_02c.png"), (40, 40)), "Xp Boost : +10xp", 10, 10))
 
-    def draw(self, num_coin, all_info, shield):
+    def draw(self, num_coin, all_info, shield, xp):
         if self.back_btn.draw(self.screen.get_width() - 79, self.screen.get_height() - 680):
-            return num_coin, shield, True
+            return num_coin, shield, xp, True
         coin = self.font.render(f"Coin : {num_coin}", True, (255, 255, 255))
         coin_rect = coin.get_rect()
         coin_rect.y = self.screen.get_height() - 685
@@ -101,6 +102,9 @@ class Buy():
                                 self.objs[obj_num - 1] = self.max_health[self.max_health_index]
                             else: self.objs.pop(obj_num - 1)
 
+                        if "Xp Boost" in obj[1]:
+                            xp += obj[3]
+
             #draw info
             info_num = 1
             for info in all_info:
@@ -111,4 +115,4 @@ class Buy():
                 self.screen.blit(info, info_rect)
                 info_num += 1
 
-        return num_coin, shield, False
+        return num_coin, shield, xp, False

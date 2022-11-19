@@ -17,7 +17,7 @@ class Dialog():
         self.text_cooldown = 1
         self.text_counter = 0
         self.font = pygame.font.Font("font/dogicapixel.ttf", 17)
-        self.first_text = "Hello Adventurer\nI'm a simple merchant..._*Buy/Goodbye|My name is Dalcke Badulf\nBut you can call me \"Badu\""
+        self.first_text = "Hello Adventurer\nI'm a simple merchant...|My name is Dalcke Badulf\nBut you can call me \"Badu\""
         self.first_text_read = False
         self.text = "Hello...|Do you want something ?\n(potion, level up...)\nI have a lot of item..._*Buy/Goodbye|Goodbye !"
         self.diff_text = self.first_text.split("|")
@@ -42,9 +42,14 @@ class Dialog():
         self.screen.blit(txt, self.txt_rect)
 
     def update(self, key, buy):
+        if not self.buy: self.s_black.set_alpha(220)
+        else: self.s_black.set_alpha(240)
         self.screen.blit(self.s_black, (0, 0))
+        
         if buy:
             self.buy = False
+            self.change_text(buy=buy)
+
         if not self.buy:
             self.screen.blit(self.dialog_box, self.dialog_box_rect)
             self.counter += 1
@@ -96,17 +101,23 @@ class Dialog():
                 self.txt(self.continue_txt)
             else:
                 self.txt_counter = -1000
-            if key == True and self.letter_counter >= len(self.diff_text[self.text_counter]) and not button or button == "pass" or buy:
-                self.letter_counter = 0
-                self.text_counter += 1
-                if self.text_counter >= len(self.diff_text):
-                    self.text_counter = 0
-                    if self.first_text_read == False:
-                        self.diff_text = self.text.split("|")
-                        self.first_text_read = True
-                        self.text_counter += 1
-                    else:
-                        self.txt_counter = -1000
-                        return False
+            if self.change_text(key, button) == "end":
+                return False
             return True
         return "buy"
+
+
+    def change_text(self, key = False, button = False, buy = False):
+        if key == True and self.letter_counter >= len(self.diff_text[self.text_counter]) and not button or button == "pass" or buy:
+            self.letter_counter = 0
+            self.text_counter += 1
+            if self.text_counter >= len(self.diff_text):
+                self.text_counter = 0
+                if self.first_text_read == False:
+                    self.diff_text = self.text.split("|")
+                    self.first_text_read = True
+                    self.text_counter += 1
+                else:
+                    self.txt_counter = -1000
+                    return "end"
+        return True

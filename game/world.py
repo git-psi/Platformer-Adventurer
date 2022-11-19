@@ -12,6 +12,8 @@ class World():
         self.screen = screen
         self.coin_counter = 0
         self.tiles = tilespy.load_tiles()
+        self.xp = 0
+        self.text_xp = []
 
         obj = self.tiles.get_tiles("obj")
         tiles = [obj]
@@ -140,7 +142,9 @@ class World():
             for slime in self.slime_group:
                 alive = slime.alive()
                 if alive or not player_alive == True:
+                    self.text_xp.append([slime.rect.x + 47, slime.rect.y + 40, 10])
                     self.slime_group.remove(slime)
+                    self.xp += 10
 
         self.pnj_group.update(x_sup)
         
