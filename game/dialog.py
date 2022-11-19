@@ -3,7 +3,7 @@ import copy
 from game import button as buttonpy
 
 class Dialog():
-    def __init__(self, screen):
+    def __init__(self, screen, first_text, text):
         self.screen = screen
         self.dialog_box = pygame.image.load("img/dialogbox.png")
         self.dialog_box = pygame.transform.scale(self.dialog_box, (600, 240))
@@ -17,9 +17,9 @@ class Dialog():
         self.text_cooldown = 1
         self.text_counter = 0
         self.font = pygame.font.Font("font/dogicapixel.ttf", 17)
-        self.first_text = "Hello Adventurer\nI'm a simple merchant...|My name is Dalcke Badulf\nBut you can call me \"Badu\""
+        self.first_text = first_text
         self.first_text_read = False
-        self.text = "Hello...|Do you want something ?\n(potion, level up...)\nI have a lot of item..._*Buy/Goodbye|Goodbye !"
+        self.text = text
         self.diff_text = self.first_text.split("|")
         self.buy = False
 

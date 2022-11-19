@@ -3,14 +3,21 @@ import copy
 from game import dialog as dialogpy
 
 class Pnj(pygame.sprite.Sprite):
-    def __init__(self, screen, x, y, name, category_name):
+    def __init__(self, screen, x, y, name, category_name, first_text, text, method):
         pygame.sprite.Sprite.__init__(self)
         self.screen = screen
         self.img = []
-        for i in range(0, 5):
-            img = pygame.image.load(f"img/npc\individual sprites\{category_name}\{name}\{name}_0{i}.png")
-            img = pygame.transform.scale(img, (80, 80))
-            self.img.append(img)
+        if method == 0:
+            for i in range(0, 5):
+                img = pygame.image.load(f"img/npc\individual sprites\{category_name}\{name}\{name}_0{i}.png")
+                img = pygame.transform.scale(img, (80, 80))
+                self.img.append(img)
+        if method == 1:
+            for i in range(1, 5):
+                img = pygame.image.load(f"img/npc\individual sprites\{category_name}\{name}\{name}_{i}.png")
+                img = pygame.transform.scale(img, (80, 80))
+                self.img.append(img)
+                print(1)
         self.index = 0
         self.counter = 0
         self.cooldown = 4
@@ -18,7 +25,7 @@ class Pnj(pygame.sprite.Sprite):
         self.rect = self.pnj_img.get_rect()
         self.rect.centerx = x
         self.rect.y = y
-        self.dialogclass = dialogpy.Dialog(screen)
+        self.dialogclass = dialogpy.Dialog(screen, first_text, text)
     
     def update(self, x_sup):
         self.counter += 1

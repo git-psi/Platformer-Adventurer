@@ -8,6 +8,7 @@ class load_tiles():
         self.obj.append([pygame.image.load("img\SlimeAnimations/Slime.png"), "obj/2"])
         self.obj.append([pygame.image.load("img/transparent.png"), "obj/3"])
         self.obj.append([pygame.image.load("img/npc\individual sprites\medieval\merchant\merchant_00.png"), "obj/4"])
+        self.obj.append([pygame.image.load("img/npc\individual sprites\medieval/adventurer_05/adventurer_05_1.png"), "obj/5"])
 
         self.all_tiles_name = ["grass", "sand", "cake", "castle", "choco", "dirt", "metal", "purple", "sand", "snow", "tundra"]
 
@@ -22,7 +23,6 @@ class load_tiles():
             tile.append([pygame.image.load(f"img\PNG {tiles_name}\{tiles_name}HalfRight.png"), f"{tiles_name}/4/half"])
             num = 5
             for i in range(1, 37):
-                #if i >= 1 and i <= 7 or i >= 12:
                 try:
                     if i < 10:
                         i = "0"+str(i)

@@ -95,7 +95,14 @@ class World():
             col_count = 0
             for tile in row:
                 if tile == "obj/4":
-                    pnj = pnjpy.Pnj(self.screen, col_count * self.tile_size + self.tile_size // 2, row_count * self.tile_size - 25, "merchant", "medieval")
+                    first_text = "Hello Adventurer\nI'm a simple merchant...|My name is Dalcke Badulf\nBut you can call me \"Badu\""
+                    text = "Hello...|Do you want something ?\n(potion, level up...)\nI have a lot of item..._*Buy/Goodbye|Goodbye !"
+                    pnj = pnjpy.Pnj(self.screen, col_count * self.tile_size + self.tile_size // 2, row_count * self.tile_size - 25, "merchant", "medieval", first_text, text, 0)
+                    self.pnj_group.add(pnj)
+                if tile == "obj/5":
+                    first_text = "Hello Adventurer\nI'm a simple merchant...|My name is Dalcke Badulf\nBut you can call me \"Badu\""
+                    text = "Hello...|Do you want something ?\n(potion, level up...)\nI have a lot of item..._*Buy/Goodbye|Goodbye !"
+                    pnj = pnjpy.Pnj(self.screen, col_count * self.tile_size + self.tile_size // 2, row_count * self.tile_size - 25, "adventurer_05", "medieval", first_text, text, 1)
                     self.pnj_group.add(pnj)
                 col_count += 1
             row_count += 1

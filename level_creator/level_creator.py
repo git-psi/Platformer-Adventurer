@@ -203,7 +203,7 @@ while run:
                     world.calculate_coin()
                 if str(tile_num) == "obj/2":
                     world.calculate_ennemy()
-                if tile_num == "obj/4":
+                elif "obj" in tile_num:
                     world.calculate_pnj()
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 3 and not block:
             mouse = pygame.mouse.get_pos()
