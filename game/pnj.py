@@ -42,12 +42,12 @@ class Pnj(pygame.sprite.Sprite):
 
         if player_rect.colliderect(rect):
             if key == True:
-                return True
+                return "dialog"
+            else: return "collide"
+
+        self.dialogclass.txt_counter = -1000
         return False
 
     def dialog(self, key, buy = False):
         response = self.dialogclass.update(key, buy)
         return response
-
-    def restart_dialog(self):
-        pass

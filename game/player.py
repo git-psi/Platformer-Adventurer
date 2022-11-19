@@ -108,7 +108,7 @@ class Player():
         self.glitch_surface.set_alpha(128)
         self.glitch_surface.fill((0, 0, 0))
         self.life = 100
-        self.life_total = copy.deepcopy(self.life)
+        self.life_max = copy.deepcopy(self.life)
         self.life_remove = 0
         self.immunity_counter = 0
         self.visible = True
@@ -266,7 +266,9 @@ class Player():
                 if self.index_fall >= len(self.image_fall_right):
                     self.index_fall = 0
 
-            
+            if not self.in_air and self.animation == 1:
+                self.animation = 2
+
 
             #add gravity
             self.vel_y += 1
@@ -355,17 +357,14 @@ class Player():
         self.text_animation.update(x_sup, y_sup)
 
         if self.alive == True:
-            self.lifebar.update(self.rect.x + x_sup + 30, self.rect.y + y_sup, self.life, self.life_total)
+            self.lifebar.update(self.rect.x + x_sup + 30, self.rect.y + y_sup, self.life, self.life_max)
             
         return x_sup, y_sup
 
     def take_dammage(self, dammage : float, counter):
         if not self.immunity_counter and self.alive == True:
-            dammage = float(dammage)
-            print(dammage)
             dammage = (dammage) * (100 - self.shield)
             dammage = dammage//100
-            print(dammage)
             self.life_remove += dammage
             self.immunity_counter = counter
             self.text_animation.add_dammage(self.rect.x + 30, self.rect.y, dammage)
@@ -373,13 +372,14 @@ class Player():
     def immunity(self):
         if self.immunity_counter > 0:
             if self.life_remove > 0:
-                self.life_remove -= 2
-                self.life -= 2
+                if self.life_remove != 1:
+                    self.life_remove -= 2
+                    self.life -= 2
+                else:
+                    self.life_remove -= 1
+                    self.life -= 1
             self.immunity_counter -= 1
             n = self.immunity_counter // 3
             if not (n % 2) == 0:
                 self.visible = False
-            else: self.visible = True     
-
-    def damage_increase(self, strenght):
-        self.dammage += strenght
+            else: self.visible = True

@@ -101,7 +101,7 @@ while run:
         screen.blit(shield_text, (25, 111))
 
         #draw life
-        life = font.render(f"Life : {player.life}/{player.life_total}", True, [255, 255, 255])
+        life = font.render(f"Life : {player.life}/{player.life_max}", True, [255, 255, 255])
         screen.blit(life, (25, 55))
 
     x_world, y_world = player.update(x_world, y_world, max_x_player, cheat, str(round(clock.get_fps(), 2)), world.slime_group, in_dialog, shield)
@@ -126,15 +126,19 @@ while run:
         text_animation.add_coin(player.rect.x, player.rect.y)
 
     for pnj in world.pnj_group:
-        if pnj.player_collide(x_world, pygame.Rect(player.rect.x + x_world + 30, player.rect.y + y_world + 10, player.width, player.height), cheat, return_key):
-            in_dialog = pnj
+        if not in_dialog:
+            response = pnj.player_collide(x_world, pygame.Rect(player.rect.x + x_world + 30, player.rect.y + y_world + 10, player.width, player.height), cheat, return_key)
+            if response == "collide":
+                pnj.dialogclass.txt(pnj.dialogclass.speak_txt)
+            if response == "dialog":
+                in_dialog = pnj
 
     if not in_dialog == False:
         response = pnj.dialog(return_key)
         if response == False:
             in_dialog = False
         if response == "buy":
-            info = (f"Sword Strenght : {player.dammage}", f"Shield : -{shield}% of damage")
+            info = (f"Sword Strenght : {player.dammage}", f"Shield : -{shield}% of damage", f"Life : {player.life}/{player.life_max}")
             score, shield, response = buy.draw(score, info, shield)
             if response:
                 pnj.dialog(return_key, True)

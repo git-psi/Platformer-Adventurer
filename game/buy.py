@@ -23,11 +23,18 @@ class Buy():
             ]
         self.shield_index = 0
 
+        self.max_health = [(pygame.transform.scale(pygame.image.load("img\Kyrise's 16x16 RPG Icon Pack - V1.3\icons/48x48/book_03d.png"), (40, 40)), "Increase Maximum Health : 110", 10, 110),
+            (pygame.transform.scale(pygame.image.load("img\Kyrise's 16x16 RPG Icon Pack - V1.3\icons/48x48/book_03d.png"), (40, 40)), "Increase Maximum Health : 120", 10, 120),
+            (pygame.transform.scale(pygame.image.load("img\Kyrise's 16x16 RPG Icon Pack - V1.3\icons/48x48/book_03d.png"), (40, 40)), "Increase Maximum Health : 130", 10, 130)
+        ]
+        self.max_health_index = 0
+
 
         self.objs = [] #(obj : pygame.image, name : str, price : int)
         self.objs.append(self.sword[self.sword_index])
         self.objs.append(self.shield[self.shield_index])
-        self.objs.append((pygame.transform.scale(pygame.image.load("img\Kyrise's 16x16 RPG Icon Pack - V1.3\icons/48x48\sword_02b.png"), (40, 40)), "Object 2", 2))
+        self.objs.append(self.max_health[self.max_health_index])
+        self.objs.append((pygame.transform.scale(pygame.image.load("img\Kyrise's 16x16 RPG Icon Pack - V1.3\icons/48x48\potion_01a.png"), (40, 40)), "Regeneration Of Life : 10%", 10, 10))
 
     def draw(self, num_coin, all_info, shield):
         if self.back_btn.draw(self.screen.get_width() - 79, self.screen.get_height() - 680):
@@ -57,23 +64,42 @@ class Buy():
             obj_num += 1
 
             if num_coin >= obj[2]:
-                if self.buy_btn.draw(270, self.screen.get_height() - 600 + (obj_num - 1) * 70 + 10):
-                    num_coin -= obj[2]
+                obj_button = True
+                if "Regeneration Of Life" in obj[1]:
+                    if self.player.life == self.player.life_max:
+                        obj_button = False
+                if obj_button:
+                    if self.buy_btn.draw(270, self.screen.get_height() - 600 + (obj_num - 1) * 70 + 10):
+                        num_coin -= obj[2]
 
-                    if "Sword" in obj[1]:
-                        #self.player.damage_increase(1)
-                        self.player.dammage = obj[3]
-                        self.sword_index += 1
-                        if not self.sword_index >= len(self.sword):
-                            self.objs[obj_num - 1] = self.sword[self.sword_index]
-                        else: self.objs.pop(obj_num - 1)
+                        if "Sword" in obj[1]:
+                            self.player.dammage = obj[3]
+                            self.sword_index += 1
+                            if not self.sword_index >= len(self.sword):
+                                self.objs[obj_num - 1] = self.sword[self.sword_index]
+                            else: self.objs.pop(obj_num - 1)
 
-                    if "Shiel" in obj[1]:
-                        shield = obj[3]
-                        self.shield_index += 1
-                        if not self.shield_index >= len(self.shield):
-                            self.objs[obj_num - 1] = self.shield[self.shield_index]
-                        else: self.objs.pop(obj_num - 1)
+                        if "Shield" in obj[1]:
+                            shield = obj[3]
+                            self.shield_index += 1
+                            if not self.shield_index >= len(self.shield):
+                                self.objs[obj_num - 1] = self.shield[self.shield_index]
+                            else: self.objs.pop(obj_num - 1)
+
+                        if "Regeneration Of Life" in obj[1]:
+                            print(1)
+                            sup_life = obj[3] * self.player.life_max // 100
+                            if sup_life + self.player.life > self.player.life_max:
+                                sup_life = self.player.life_max - self.player.life
+                            self.player.life += sup_life
+
+                        if "Increase Maximum Health" in obj[1]:
+                            self.player.life += obj[3] - self.player.life_max
+                            self.player.life_max = obj[3]
+                            self.max_health_index += 1
+                            if not self.max_health_index >= len(self.max_health):
+                                self.objs[obj_num - 1] = self.max_health[self.max_health_index]
+                            else: self.objs.pop(obj_num - 1)
 
             #draw info
             info_num = 1

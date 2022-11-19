@@ -23,6 +23,24 @@ class Dialog():
         self.diff_text = self.first_text.split("|")
         self.buy = False
 
+        self.speak_txt = self.font.render("[press return to speak]", True, (255, 255, 255))
+        self.continue_txt =  self.font.render("[press return to contine]", True, (255, 255, 255))
+        self.continue_txt.set_alpha(100)
+        self.txt_rect = self.speak_txt.get_rect()
+        self.txt_rect.center = (self.screen.get_width() // 2, self.screen.get_height() - 30)
+        self.txt_counter = -1000
+        self.txt_direction = 20
+
+    def txt(self, txt):
+        self.txt_counter += self.txt_direction
+        if self.txt_counter >= 355 or self.txt_counter <= -100 and self.txt_direction < 0:
+            self.txt_direction *= -1
+        if self.txt_counter >= 0 and self.txt_counter <= 255:
+            txt.set_alpha(self.txt_counter)
+        if self.txt_counter < 0:
+            txt.set_alpha(0)
+        self.screen.blit(txt, self.txt_rect)
+
     def update(self, key, buy):
         self.screen.blit(self.s_black, (0, 0))
         if buy:
@@ -74,6 +92,10 @@ class Dialog():
                 rect.centerx = self.screen.get_width() // 2
                 self.screen.blit(text, rect)
                 line_num += 1
+            if self.letter_counter >= len(self.diff_text[self.text_counter]) and not button:
+                self.txt(self.continue_txt)
+            else:
+                self.txt_counter = -1000
             if key == True and self.letter_counter >= len(self.diff_text[self.text_counter]) and not button or button == "pass" or buy:
                 self.letter_counter = 0
                 self.text_counter += 1
@@ -84,6 +106,7 @@ class Dialog():
                         self.first_text_read = True
                         self.text_counter += 1
                     else:
+                        self.txt_counter = -1000
                         return False
             return True
         return "buy"
