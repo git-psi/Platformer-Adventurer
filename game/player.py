@@ -338,6 +338,8 @@ class Player():
             self.screen.blit(x_cheat, (1040, 20))
             self.screen.blit(y_cheat, (1040, 50))
             self.screen.blit(fps, (1040, 80))
+            hide_game = pygame.Rect(self.rect.x + self.width // 2, self.rect.y + self.height // 2, 100, 100)
+            pygame.draw.rect(self.screen, (0, 0, 255), hide_game, 5)
 
         if self.life <= 0 and self.alive == True:
             self.alive = 60

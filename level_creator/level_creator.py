@@ -4,8 +4,6 @@ from game import world as world_py
 from level_creator import all_block as all_blockpy
 from tkinter import *
 from tkinter import messagebox
-import requests
-import base64
 
 pygame.init()
 
@@ -203,7 +201,7 @@ while run:
             x += (x_sup // tile_size) * -1
             y += (y_sup // tile_size) * -1
             if x <= number_of_column and y < number_of_line and mouse[1] < 700:
-                world_data[y][x] = str(tile_num)
+                world_data[y][x] = tile_num
                 if str(tile_num) == "obj/1":
                     world.calculate_coin()
                 if str(tile_num) == "obj/2":
@@ -218,10 +216,13 @@ while run:
             y += (y_sup // tile_size) * -1
             if x <= number_of_column and y < number_of_line:
                 if "obj" in str(world_data[y][x]) or "pnj" in str(world_data[y][x]):
+                    calculate = True
+                else: calculate = False
+                world_data[y][x] = 0
+                if calculate:
                     world.calculate_coin()
                     world.calculate_ennemy()
                     world.calculate_pnj()
-                world_data[y][x] = 0
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 5 and block:
             all_block_sup -= 80
             if all_block_sup < -1500:
@@ -256,30 +257,23 @@ while run:
     menu_response =  draw_menu()
 
     if menu_response == "Restart":
-        if messagebox.askokcancel("Validation", "Are you sure you want to start over ?"):
-            if messagebox.askyesno("Restart method ?", "Yes : restart from zero !\nNo : restart from original map !"):
-                print(1)
-                reload_data()
-                world_data = world_py.world_data_function()
-                world = world_py.World(world_data, tile_size, screen)
-                number_of_line = number_of_line_base
-                number_of_column = number_of_column_base
-            else:
-                print(2)
-                url = 'https://api.github.com/repos/git-psi/Platformer-Adventurer/contents/world_data.txt'
-                req = requests.get(url)
-                print(req.status_code == requests.codes.ok)
-                if req.status_code == requests.codes.ok:
-                    req = req.json()
-                    world_data = base64.b64decode(req['content'])
-                    print(world_data)
-                    world_data_file = open("world_data.txt", "w")
-                    world_data_file.write(world_data)
-                    world_data_file.close()
-                    world = world_py.World(world_data, tile_size, screen)
-                    number_of_line, number_of_column = num_of_line_and_column()
-                else:
-                    messagebox.showerror("Error !", "Error 404")
+        if messagebox.askyesno("Restart method ?", "Yes : restart from zero !\nNo : restart from original map !"):
+            reload_data()
+            world_data = world_py.world_data_function()
+            world = world_py.World(world_data, tile_size, screen)
+            number_of_line = number_of_line_base
+            number_of_column = number_of_column_base
+        else:
+            world_file = open("world_data_base.txt", "r").read()
+            world_data_file = open("world_data.txt", "w")
+            world_data_file.write(world_file)
+            world_data_file.close()
+            world_data = world_py.world_data_function()
+            world = world_py.World(world_data, tile_size, screen)
+            number_of_line, number_of_column = num_of_line_and_column()
+            world.calculate_pnj()
+            world.calculate_coin()
+            world.calculate_ennemy()
 
     elif menu_response == "Save":
         save_data(world_data)
