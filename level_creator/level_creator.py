@@ -4,6 +4,8 @@ from game import world as world_py
 from level_creator import all_block as all_blockpy
 from tkinter import *
 from tkinter import messagebox
+import requests
+import base64
 
 pygame.init()
 
@@ -59,7 +61,6 @@ def draw_menu():
     pygame.draw.rect(screen, black, pygame.Rect(0, 700, 1200, 100))
 
     if restart_button.draw() and not block:
-        reload_data()
         return "Restart"
     if save_button.draw() and not block:
         return "Save"
@@ -79,12 +80,12 @@ def reload_data():
         world_data = world_data[:-1]
         world_data += "\n"
     world_data = world_data[:-1]
-    world_data_file = open("world_data", "w")
+    world_data_file = open("world_data.txt", "w")
     world_data_file.write(world_data)
     world_data_file.close()
 
 def save_data(world_data):
-    world_data_file = open("world_data", "r")
+    world_data_file = open("world_data.txt", "r")
     world_data_remove = 1000000000000
     for line in world_data:
         world_line_data_remove = 0
@@ -95,7 +96,7 @@ def save_data(world_data):
         if world_line_data_remove < world_data_remove:
             world_data_remove = world_line_data_remove
 
-    world_data_file = open("world_data", "w")
+    world_data_file = open("world_data.txt", "w")
     world_data_write = ""
     for line in world_data:
         for tile in range(len(line) - world_data_remove):
@@ -142,12 +143,16 @@ def add_line():
     for line in world_data:
         line.append(0)
 
-number_of_line = 14
-for line in open("world_data"):
-    number_of_column = 0
-    num_of_column = line.split("|")
-    for column in num_of_column:
-        number_of_column += 1
+def num_of_line_and_column():
+    number_of_line_calc = 14
+    for line in open("world_data.txt"):
+        number_of_column_calc = 0
+        num_of_column_calc = line.split("|")
+        for column in num_of_column_calc:
+            number_of_column_calc += 1
+    return number_of_line_calc, number_of_column_calc
+
+number_of_line, number_of_column = num_of_line_and_column()
 
 world_data = world_py.world_data_function()
 
@@ -212,10 +217,11 @@ while run:
             x += (x_sup // tile_size) * -1
             y += (y_sup // tile_size) * -1
             if x <= number_of_column and y < number_of_line:
+                if "obj" in str(world_data[y][x]) or "pnj" in str(world_data[y][x]):
+                    world.calculate_coin()
+                    world.calculate_ennemy()
+                    world.calculate_pnj()
                 world_data[y][x] = 0
-                world.calculate_coin()
-                world.calculate_ennemy()
-                world.calculate_pnj()
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 5 and block:
             all_block_sup -= 80
             if all_block_sup < -1500:
@@ -251,10 +257,29 @@ while run:
 
     if menu_response == "Restart":
         if messagebox.askokcancel("Validation", "Are you sure you want to start over ?"):
-            world_data = world_py.world_data_function()
-            world = world_py.World(world_data, tile_size, screen)
-            number_of_line = number_of_line_base
-            number_of_column = number_of_column_base
+            if messagebox.askyesno("Restart method ?", "Yes : restart from zero !\nNo : restart from original map !"):
+                print(1)
+                reload_data()
+                world_data = world_py.world_data_function()
+                world = world_py.World(world_data, tile_size, screen)
+                number_of_line = number_of_line_base
+                number_of_column = number_of_column_base
+            else:
+                print(2)
+                url = 'https://api.github.com/repos/git-psi/Platformer-Adventurer/contents/world_data'
+                req = requests.get(url)
+                if req.status_code == requests.codes.ok:
+                    req = req.json()
+                    world_data = base64.b64decode(req['content'])
+                    print(world_data)
+                    world_data_file = open("world_data.txt", "w")
+                    world_data_file.write(world_data)
+                    world_data_file.close()
+                    world = world_py.World(world_data, tile_size, screen)
+                    number_of_line, number_of_column = num_of_line_and_column()
+                else:
+                    messagebox.showerror("Error !", "Error 404")
+
     elif menu_response == "Save":
         save_data(world_data)
     elif menu_response == "block":

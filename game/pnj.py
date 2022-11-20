@@ -19,7 +19,6 @@ class Pnj(pygame.sprite.Sprite):
                 img = pygame.transform.scale(img, (80, 80))
                 self.img.append(img)
         self.index = random.randint(0, 3)
-        print(self.index)
         self.counter = 0
         self.cooldown = 4
         self.pnj_img = self.img[self.index]

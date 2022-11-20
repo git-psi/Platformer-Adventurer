@@ -129,7 +129,7 @@ class World():
             row_count += 1
 
     def max_x_player(self):
-        world_data_file = open("world_data", "r")
+        world_data_file = open("world_data.txt", "r")
         world_data_file = world_data_file.read()
         row = world_data_file.split("\n")
 
@@ -178,7 +178,7 @@ class World():
         
 
 def world_data_function():
-    world_data_file = open("world_data", "r")
+    world_data_file = open("world_data.txt", "r")
     world_data_file = world_data_file.read()
     row = world_data_file.split("\n")
     world_data = []

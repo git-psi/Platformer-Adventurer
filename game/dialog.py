@@ -88,14 +88,11 @@ class Dialog():
                                 button = "pass"
 
                             if self.name == "king":
-                                print(1)
                                 if all_btn_text[num_btn] == "Of course":
-                                    print(2)
                                     add_text = "Grrrrr !\nEveryone is there to strip me !|I am the king of this place..."
                                     for text in add_text.split("|"):
                                         self.diff_text.append(text)
                                 elif all_btn_text[num_btn] == "No way":
-                                    print(3)
                                     add_text = "It's good !\nFinally someone who isn't here for my money.|I am the king of this place..."
                                     for text in add_text.split("|"):
                                         self.diff_text.append(text)
