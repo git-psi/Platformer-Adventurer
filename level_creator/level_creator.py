@@ -266,8 +266,9 @@ while run:
                 number_of_column = number_of_column_base
             else:
                 print(2)
-                url = 'https://api.github.com/repos/git-psi/Platformer-Adventurer/contents/world_data'
+                url = 'https://api.github.com/repos/git-psi/Platformer-Adventurer/contents/world_data.txt'
                 req = requests.get(url)
+                print(req.status_code == requests.codes.ok)
                 if req.status_code == requests.codes.ok:
                     req = req.json()
                     world_data = base64.b64decode(req['content'])
