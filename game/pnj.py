@@ -1,5 +1,6 @@
 import pygame
 import copy
+import random
 from game import dialog as dialogpy
 
 class Pnj(pygame.sprite.Sprite):
@@ -17,7 +18,8 @@ class Pnj(pygame.sprite.Sprite):
                 img = pygame.image.load(f"img/npc\individual sprites\{category_name}\{name}\{name}_{i}.png")
                 img = pygame.transform.scale(img, (80, 80))
                 self.img.append(img)
-        self.index = 0
+        self.index = random.randint(0, 3)
+        print(self.index)
         self.counter = 0
         self.cooldown = 4
         self.pnj_img = self.img[self.index]

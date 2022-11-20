@@ -7,14 +7,20 @@ class load_tiles():
         self.obj.append([pygame.image.load("img\coin\Coin-1.png.png"), "obj/1"])
         self.obj.append([pygame.image.load("img\SlimeAnimations/Slime.png"), "obj/2"])
         self.obj.append([pygame.image.load("img/transparent.png"), "obj/3"])
-        self.obj.append([pygame.image.load("img/npc\individual sprites\medieval\merchant\merchant_00.png"), "obj/4"])
-        self.obj.append([pygame.image.load("img/npc\individual sprites\medieval/adventurer_05/adventurer_05_1.png"), "obj/5"])
+
+        self.pnj = []
+        self.pnj.append([pygame.image.load("img/npc\individual sprites\medieval\merchant\merchant_00.png"), "pnj/1"])
+        self.pnj.append([pygame.image.load("img/npc\individual sprites\medieval/adventurer_05/adventurer_05_1.png"), "pnj/2"])
+        self.pnj.append([pygame.image.load("img/npc\individual sprites\medieval/king/king_00.png"), "pnj/3"])
+        self.pnj.append([pygame.image.load("img/npc\individual sprites\medieval/captain/captain_1.png"), "pnj/4"])
 
         self.all_tiles_name = ["grass", "sand", "cake", "castle", "choco", "dirt", "metal", "purple", "sand", "snow", "tundra"]
 
     def get_tiles(self, tiles_name):
         if tiles_name == "obj":
             return self.obj
+        if tiles_name == "pnj":
+            return self.pnj
         else:
             tile = []
             tile.append([pygame.image.load(f"img\PNG {tiles_name}\{tiles_name}Half.png"), f"{tiles_name}/1/half"])

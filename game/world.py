@@ -15,8 +15,16 @@ class World():
         self.xp = 0
         self.text_xp = []
 
+        self.guard_txt = [
+            ["I'm Marius !\nI am a king's guard", "Don't you dare hit the king !|He is my only family...|Long live the king !"],
+            ["We are the king's guards !\nWe received an extraordinary training.", "Hello adventurer !|Goodbye !"],
+            ["I'm Ivor...\nThe king hired me to protect him.", "...|See you soon..."],
+            ["...hello", "...hello\n...|...Goodbye..."]
+        ]
+
         obj = self.tiles.get_tiles("obj")
-        tiles = [obj]
+        pnj = self.tiles.get_tiles("pnj")
+        tiles = [obj, pnj]
         for tile_name in self.tiles.all_tiles_name:
             tiles.append(self.tiles.get_tiles(tile_name))
 
@@ -41,7 +49,7 @@ class World():
             col_count = 0
             for tile in row:
                 try:
-                    if not "obj" in tile:
+                    if not "obj" in tile and not "pnj" in tile:
                         img = pygame.transform.scale(self.all_tiles[tile], (self.tile_size, self.tile_size))
                         img_rect = img.get_rect()
                         if "half" in tile:
@@ -91,19 +99,32 @@ class World():
     def calculate_pnj(self):
         self.pnj_group.empty()
         row_count = 0
+        guard_counter = 0
         for row in self.world_data:
             col_count = 0
             for tile in row:
-                if tile == "obj/4":
+                if guard_counter >= len(self.guard_txt): guard_counter = 0
+                if tile == "pnj/1":
                     first_text = "Hello Adventurer\nI'm a simple merchant...|My name is Dalcke Badulf\nBut you can call me \"Badu\""
                     text = "Hello...|Do you want something ?\n(potion, level up...)\nI have a lot of item..._*Buy/Goodbye|Goodbye !"
                     pnj = pnjpy.Pnj(self.screen, col_count * self.tile_size + self.tile_size // 2, row_count * self.tile_size - 25, "merchant", "medieval", first_text, text, 0)
                     self.pnj_group.add(pnj)
-                if tile == "obj/5":
+                if tile == "pnj/2":
                     first_text = "Hello who are you ?_*An adventurer/..."
                     text = "Wyatt says hello !|Take good care of yourself !\nLots of monsters hanging around here.|See you soon..."
                     pnj = pnjpy.Pnj(self.screen, col_count * self.tile_size + self.tile_size // 2, row_count * self.tile_size - 25, "adventurer_05", "medieval", first_text, text, 1)
                     self.pnj_group.add(pnj)
+                if tile == "pnj/3":
+                    first_text = "Hello to you, peasants of my kingdom\nIf you're here for the money you can leave !_*Of course/No way"
+                    text = "Bow before your king !|I won't waste my time\ntalking to people of low society.|Have a good time on my kingdom !"
+                    pnj = pnjpy.Pnj(self.screen, col_count * self.tile_size + self.tile_size // 2, row_count * self.tile_size - 25, "king", "medieval", first_text, text, 0)
+                    self.pnj_group.add(pnj)
+                if tile == "pnj/4":
+                    first_text = self.guard_txt[guard_counter][0]
+                    text = self.guard_txt[guard_counter][1]
+                    pnj = pnjpy.Pnj(self.screen, col_count * self.tile_size + self.tile_size // 2, row_count * self.tile_size - 25, "captain", "medieval", first_text, text, 1)
+                    self.pnj_group.add(pnj)
+                    guard_counter += 1
                 col_count += 1
             row_count += 1
 

@@ -44,7 +44,7 @@ class TextAnimation():
         remove_i = 0
         for i in range(0, len(self.xp)):
             i -= remove_i
-            text = self.font.render(f"+{str(self.xp[i][3])}xp", True, (2*self.xp[i][2], int(3 * self.xp[i][2] + 180), 2*self.xp[i][2]))
+            text = self.font.render(f"+{str(self.xp[i][3])}xp", True, (0, 200, 0))
             self.xp[i][2] -= 1
             self.xp[i][1] -= 7
             self.screen.blit(text, (self.xp[i][0] + x_sup, self.xp[i][1] + y_sup))

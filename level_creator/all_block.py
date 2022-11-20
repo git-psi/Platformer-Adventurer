@@ -7,7 +7,7 @@ class AllBlock():
         self.tiles = tilespy.load_tiles()
         self.screen = screen
         self.tile_size = 45
-        self.column = [self.tiles.get_tiles("obj")]
+        self.column = [self.tiles.get_tiles("obj"), self.tiles.get_tiles("pnj")]
         for tile_name in self.tiles.all_tiles_name:
             self.column.append(self.tiles.get_tiles(tile_name))
         for column in range(0, len(self.column)):
@@ -16,7 +16,7 @@ class AllBlock():
         self.s_black = pygame.Surface((screen.get_width(), screen.get_height()))
         self.s_black.set_alpha(200)
         self.s_black.fill((0, 0, 0))
-        self.rect = self.column[1][10][0].get_rect()
+        self.rect = self.column[3][10][0].get_rect()
         self.num_of_column = len(self.column) + 1
         self.back_button = button.Button(screen, "Back")
         self.font = pygame.font.Font("font/dogica.ttf", 5)
