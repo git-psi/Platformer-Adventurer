@@ -88,7 +88,6 @@ while run:
 
         if not world.text_xp == []:
             for i in world.text_xp:
-                print(i)
                 text_animation.add_xp(i[0], i[1] + 20, i[2])
             world.text_xp = []
 
@@ -140,23 +139,23 @@ while run:
         score += 1
         text_animation.add_coin(player.rect.x, player.rect.y)
 
-    for pnj in world.pnj_group:
+    for pnj in range(0, len(world.pnj_group)):
         if not in_dialog:
-            response = pnj.player_collide(x_world, pygame.Rect(player.rect.x + x_world + 30, player.rect.y + y_world + 10, player.width, player.height), cheat, return_key)
+            response = world.pnj_group.sprites()[pnj].player_collide(x_world, pygame.Rect(player.rect.x + x_world + 30, player.rect.y + y_world + 10, player.width, player.height), cheat, return_key)
             if response == "collide":
-                pnj.dialogclass.txt(pnj.dialogclass.speak_txt)
+                world.pnj_group.sprites()[pnj].dialogclass.txt(world.pnj_group.sprites()[pnj].dialogclass.speak_txt)
             if response == "dialog":
-                in_dialog = pnj
+                in_dialog = world.pnj_group.sprites()[pnj]
 
     if not in_dialog == False:
-        response = pnj.dialog(return_key)
+        response = in_dialog.dialog(return_key)
         if response == False:
             in_dialog = False
         if response == "buy":
             info = (f"Sword Strenght : {player.dammage}", f"Shield : -{shield}% of damage", f"Life : {player.life}/{player.life_max}", f"Xp : {xp}")
             score, shield, xp, response = buy.draw(score, info, shield, xp)
             if response:
-                pnj.dialog(return_key, True)
+                in_dialog.dialog(return_key, True)
     
     if player.alive == False or player.alive < 60 and player.alive != True:
         response = game_over.update()

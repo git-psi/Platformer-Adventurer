@@ -17,7 +17,6 @@ class Pnj(pygame.sprite.Sprite):
                 img = pygame.image.load(f"img/npc\individual sprites\{category_name}\{name}\{name}_{i}.png")
                 img = pygame.transform.scale(img, (80, 80))
                 self.img.append(img)
-                print(1)
         self.index = 0
         self.counter = 0
         self.cooldown = 4
@@ -25,7 +24,7 @@ class Pnj(pygame.sprite.Sprite):
         self.rect = self.pnj_img.get_rect()
         self.rect.centerx = x
         self.rect.y = y
-        self.dialogclass = dialogpy.Dialog(screen, first_text, text)
+        self.dialogclass = dialogpy.Dialog(screen, first_text, text, name)
     
     def update(self, x_sup):
         self.counter += 1

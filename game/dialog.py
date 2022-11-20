@@ -3,7 +3,8 @@ import copy
 from game import button as buttonpy
 
 class Dialog():
-    def __init__(self, screen, first_text, text):
+    def __init__(self, screen, first_text, text, name = False):
+        self.name = name
         self.screen = screen
         self.dialog_box = pygame.image.load("img/dialogbox.png")
         self.dialog_box = pygame.transform.scale(self.dialog_box, (600, 240))
@@ -30,6 +31,7 @@ class Dialog():
         self.txt_rect.center = (self.screen.get_width() // 2, self.screen.get_height() - 30)
         self.txt_counter = -1000
         self.txt_direction = 20
+        self.font_btn = pygame.font.Font("font/dogicapixel.ttf", 13)
 
     def txt(self, txt):
         self.txt_counter += self.txt_direction
@@ -66,13 +68,24 @@ class Dialog():
                     all_btn_text = all_btn_text.split("/")
                     all_btn = []
                     for i in range(0, len(all_btn_text)):
-                        all_btn.append(buttonpy.Button(self.screen, all_btn_text[i]))
+                        all_btn.append(buttonpy.Button(self.screen, all_btn_text[i], font=self.font_btn))
                     num_btn = 0
                     for btn in all_btn:
                         if btn.draw(self.screen.get_width() // 2,  100 + 15 + sup_line_num + num_btn * 40 + 180):
                             if all_btn_text[num_btn] == "Buy":
                                 self.buy = True
                                 return "buy"
+                            if self.name == "adventurer_05":
+                                if all_btn_text[num_btn] == "...":
+                                    add_text = "You're not talkative I see.|My name is : Wyatt the wizard !\nI came here to see\nthe merchant of this region."
+                                    for text in add_text.split("|"):
+                                        self.diff_text.append(text)
+                                    button = "pass"
+                                elif all_btn_text[num_btn] == "An adventurer":
+                                    add_text = "What a coincidence !\nI'm an adventurer too.|My name is : Wyatt the wizard !\nI came here to see\nthe merchant of this region."
+                                    for text in add_text.split("|"):
+                                        self.diff_text.append(text)
+                                    button = "pass"
                             else:
                                 button = "pass"
                         num_btn += 1
