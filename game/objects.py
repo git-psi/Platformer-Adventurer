@@ -20,12 +20,17 @@ class Coin(pygame.sprite.Sprite):
 		self.x = x
 		self.y = y
 		self.tile_size = tile_size
+		self.cooldown = 2
+		self.counter = 0
 
 	def update(self):
-		self.img_num += 1
-		if self.img_num > 7:
-			self.img_num = 1
-		self.image = self.img_dict[self.img_num]
-		self.image = pygame.transform.scale(self.img_dict[self.img_num], (self.tile_size // 2, self.tile_size // 2))
-		self.rect = self.image.get_rect()
-		self.rect.center = (self.x, self.y)
+		self.counter += 1
+		if self.counter > self.cooldown:
+			self.counter = 0
+			self.img_num += 1
+			if self.img_num > 7:
+				self.img_num = 1
+			self.image = self.img_dict[self.img_num]
+			self.image = pygame.transform.scale(self.img_dict[self.img_num], (self.tile_size // 2, self.tile_size // 2))
+			self.rect = self.image.get_rect()
+			self.rect.center = (self.x, self.y)

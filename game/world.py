@@ -3,11 +3,13 @@ from game import objects
 from game import ennemy
 import tiles as tilespy
 from game import pnj as pnjpy
+import copy
 
 class World():
-    def __init__(self, world_data, tile_size, screen):
+    def __init__(self, world_data, tile_size, screen, player = False):
 
         self.world_data = world_data
+        self.player = player
         self.tile_size = tile_size
         self.screen = screen
         self.coin_counter = 0
@@ -38,33 +40,34 @@ class World():
         self.slime_group = pygame.sprite.Group()
         self.pnj_group = pygame.sprite.Group()
 
-    def def_player(self, player):
-        self.player = player
-
-    def calculate_tile(self):
+    def calculate_tile(self, rect = False):
         self.tiles = []
         self.transparent_tiles = []
         row_count = 0
         for row in self.world_data:
             col_count = 0
             for tile in row:
+                if self.player:
+                    collide_rect = self.player.rect.x + 1300 > col_count * self.tile_size and self.player.rect.x - 1300 < col_count * self.tile_size
+                else: collide_rect = True
                 try:
-                    if not "obj" in tile and not "pnj" in tile:
-                        img = pygame.transform.scale(self.all_tiles[tile], (self.tile_size, self.tile_size))
-                        img_rect = img.get_rect()
-                        if "half" in tile:
-                            img_rect.height -= self.tile_size // 2 - 5
-                        img_rect.x = col_count * self.tile_size
-                        img_rect.y = row_count * self.tile_size
-                        tile = (img, img_rect)
-                        self.tiles.append(tile)
-                    if tile == "obj/3":
-                        img = pygame.transform.scale(self.all_tiles[tile], (self.tile_size, self.tile_size))
-                        img_rect = img.get_rect()
-                        img_rect.x = col_count * self.tile_size
-                        img_rect.y = row_count * self.tile_size
-                        tile = (img, img_rect)
-                        self.transparent_tiles.append(tile)
+                    if collide_rect:
+                        if not "obj" in tile and not "pnj" in tile:
+                            img = pygame.transform.scale(self.all_tiles[tile], (self.tile_size, self.tile_size))
+                            img_rect = img.get_rect()
+                            if "half" in tile:
+                                img_rect.height -= self.tile_size // 2 - 5
+                            img_rect.x = col_count * self.tile_size
+                            img_rect.y = row_count * self.tile_size
+                            tile = (img, img_rect)
+                            self.tiles.append(tile)
+                        if tile == "obj/3":
+                            img = pygame.transform.scale(self.all_tiles[tile], (self.tile_size, self.tile_size))
+                            img_rect = img.get_rect()
+                            img_rect.x = col_count * self.tile_size
+                            img_rect.y = row_count * self.tile_size
+                            tile = (img, img_rect)
+                            self.transparent_tiles.append(tile)
                 except: pass
                 col_count += 1
             row_count += 1
@@ -158,12 +161,22 @@ class World():
         if not in_dialog:
             self.coin_counter += 1
             if self.coin_counter == 5:
-                self.coin_group.update()
                 self.coin_counter = 0
             for coin in self.coin_group:
-                self.screen.blit(coin.image, ((coin.rect.x + x_sup), (coin.rect.y + y_sup)))
-                if not player_alive == True:
-                    self.coin_group.remove(coin)
+                coin_rect = copy.deepcopy(coin.rect)
+                coin_rect.x += x_sup
+                if self.player != False:
+                    if self.player.hide_box(coin_rect):
+                        coin.update()
+                        self.screen.blit(coin.image, ((coin.rect.x + x_sup), (coin.rect.y + y_sup)))
+                        if not player_alive == True:
+                            self.coin_group.remove(coin)
+                else:
+                    coin.update()
+                    self.screen.blit(coin.image, ((coin.rect.x + x_sup), (coin.rect.y + y_sup)))
+                    if not player_alive == True:
+                        self.coin_group.remove(coin)
+                    
 
             self.slime_group.update(self.transparent_tiles, x_sup, y_sup, cheat)
 
@@ -174,7 +187,13 @@ class World():
                     self.slime_group.remove(slime)
                     self.xp += 10
 
-        self.pnj_group.update(x_sup)
+        if self.player:
+            for pnj in self.pnj_group:
+                rect = copy.deepcopy(pnj.rect)
+                rect.x += x_sup
+                if self.player.hide_box(rect):
+                    pnj.update(x_sup)
+        else: self.pnj_group.update(x_sup)
         
 
 def world_data_function():

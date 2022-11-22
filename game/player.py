@@ -4,7 +4,7 @@ from game import lifebar
 from game import text_animation
 
 class Player():
-    def __init__(self, x, y, tile_list, screen_height, screen):
+    def __init__(self, x, y, screen_height, screen):
         self.image_right = []
         self.image_left = []
         self.image_jump_right = []
@@ -35,6 +35,7 @@ class Player():
         self.counter_attack = 0
         self.cheat_font = pygame.font.Font("font/dogicapixel.ttf", 15)
         self.dammage = 10
+        self.hide_game = pygame.Rect(0, 0, 800, 700)
 
         for num in range(0, 5):
             img_right = pygame.image.load(f"img/adventurer/adventurer-attack1-0{num}.png")
@@ -100,7 +101,6 @@ class Player():
         self.jumped = False
         self.in_air = False
         self.direction = 1
-        self.tile_list = tile_list
         self.screen_height = screen_height
         self.screen = screen
         self.animation = 2
@@ -119,6 +119,9 @@ class Player():
         self.text_animation = text_animation.TextAnimation(self.screen)
         self.alive = True
         self.shield = 0
+
+    def define_tile_list(self, tile_list):
+        self.tile_list = tile_list
 
     def update(self, x_sup = 0, y_sup = 0, max_x_player = 1200, cheat = 0, fps = 30, slimes = pygame.sprite.Group, in_dialog = False, shield = 0):
         self.shield = shield
@@ -338,8 +341,7 @@ class Player():
             self.screen.blit(x_cheat, (1040, 20))
             self.screen.blit(y_cheat, (1040, 50))
             self.screen.blit(fps, (1040, 80))
-            hide_game = pygame.Rect(self.rect.x + self.width // 2, self.rect.y + self.height // 2, 100, 100)
-            pygame.draw.rect(self.screen, (0, 0, 255), hide_game, 5)
+            pygame.draw.rect(self.screen, (0, 0, 255), self.hide_game, 5)
 
         if self.life <= 0 and self.alive == True:
             self.alive = 60
@@ -360,6 +362,9 @@ class Player():
 
         if self.alive == True:
             self.lifebar.update(self.rect.x + x_sup + 30, self.rect.y + y_sup, self.life, self.life_max)
+
+        #hide box
+        self.hide_game.x = self.rect.x + x_sup - 400 + self.width // 2
             
         return x_sup, y_sup
 
@@ -385,3 +390,8 @@ class Player():
             if not (n % 2) == 0:
                 self.visible = False
             else: self.visible = True
+
+    def hide_box(self, box):
+        if self.hide_game.colliderect(box):
+            return True
+        else: return False

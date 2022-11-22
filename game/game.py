@@ -5,6 +5,7 @@ from game import player as playerpy
 from game import text_animation as txtpy
 from game import game_over as game_overpy
 from game import buy as buypy
+import copy
 
 pygame.init()
 
@@ -46,11 +47,11 @@ screen = pygame.display.set_mode(screen_size)
 
 def start():
     world_data = worldpy.world_data_function()
-    world = worldpy.World(world_data, tile_size, screen)
+    player = playerpy.Player(100, screen_height - 50, screen_height, screen)
+    world = worldpy.World(world_data, tile_size, screen, player)
     tiles = world.calculate_tile()
 
-    player = playerpy.Player(100, screen_height - 50, tiles, screen_height, screen)
-    world.def_player(player)
+    player.define_tile_list(worldpy.World(world_data, tile_size, screen).calculate_tile())
 
     world.calculate_coin()
     world.calculate_ennemy()
@@ -75,8 +76,6 @@ while run:
     clock.tick(fps)
     #draw the background
     screen.blit(background_img, (0, 0))
-
-    world.calculate_tile()
 
     world.draw(x_world, y_world, cheat=cheat, glitch_mode = cheat, player_alive = player.alive, in_dialog=in_dialog)
 
@@ -140,7 +139,10 @@ while run:
         text_animation.add_coin(player.rect.x, player.rect.y)
 
     for pnj in range(0, len(world.pnj_group)):
-        if not in_dialog:
+        pnj_rect = copy.deepcopy(world.pnj_group.sprites()[pnj].rect)
+        pnj_rect.x += x_world
+        collide_world_box = player.hide_box(pnj_rect)
+        if not in_dialog and collide_world_box == True:
             response = world.pnj_group.sprites()[pnj].player_collide(x_world, pygame.Rect(player.rect.x + x_world + 30, player.rect.y + y_world + 10, player.width, player.height), cheat, return_key)
             if response == "collide":
                 world.pnj_group.sprites()[pnj].dialogclass.txt(world.pnj_group.sprites()[pnj].dialogclass.speak_txt)
@@ -166,6 +168,8 @@ while run:
             x_world = 0
             y_world = 0
             score = 0
+
+    world.calculate_tile()
 
     pygame.display.update()
 

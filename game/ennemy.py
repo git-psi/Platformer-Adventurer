@@ -88,105 +88,110 @@ class Enemy(pygame.sprite.Sprite):
                 self.is_alive = False
 
     def update(self, transparent_tile, x_sup, y_sup, cheat):
-        self.immunity()
-
         if self.player:
-            player_rect = pygame.Rect(self.player.rect.x + 30 + x_sup - 20, self.player.rect.y + 10 + y_sup, self.player.width + 40, self.player.height)
+            see = self.player.hide_box((self.rect.x + 47 + x_sup, self.rect.y + 55 + y_sup, self.width, self.height))
+        else: see = True
 
-        if self.player:
-            #check collision with sword
-            if self.player.animation == 4 and not self.immunity_counter and self.player.index_attack == 2 and self.dammage_possible == True:
-                if self.player.direction == 1:
-                    sword_rect = pygame.Rect(self.player.rect.x + x_sup + 50, self.player.rect.y + y_sup - 10, self.player.width + 30, self.player.height + 40)
-                    for i in range(10):
-                        if sword_rect.colliderect(self.rect.x + 47 + x_sup, self.rect.y + 55 + y_sup, self.width, self.height) and self.dammage_possible == True:
-                            self.rect.x += 4
-                            self.immunity_counter = 20
-                            self.life_remove += self.player.dammage
-                            self.text_animation.add_dammage(self.rect.x + 47, self.rect.y + 55, self.life_remove)
-                            self.dammage_possible = False
-                            for tile in transparent_tile:
-                                if tile[1].colliderect(self.rect.x + 47 + x_sup, self.rect.y + 55 + y_sup, self.width, self.height):
-                                    self.rect.x -= 4
-                else:
-                    sword_rect = pygame.Rect(self.player.rect.x + x_sup - 20, self.player.rect.y + y_sup - 10, self.player.width + 30, self.player.height + 40)
-                    for i in range(10):
-                        if sword_rect.colliderect(self.rect.x + 47 + x_sup, self.rect.y + 55 + y_sup, self.width, self.height) and self.dammage_possible == True:
-                            self.rect.x -= 4
-                            self.immunity_counter = 20
-                            self.life_remove += self.player.dammage
-                            self.text_animation.add_dammage(self.rect.x + 47, self.rect.y + 40, self.life_remove)
-                            self.dammage_possible = False
-                            for tile in transparent_tile:
-                                if tile[1].colliderect(self.rect.x + 47 + x_sup, self.rect.y + 55 + y_sup, self.width, self.height):
-                                    self.rect.x += 4
-
-        if not self.immunity_counter > 0:
-            if self.animation == 0:
-                self.idle_counter += 1
-
-            if self.animation == 1:
-                self.attack_counter += 1
+        if see:
+            self.immunity()
 
             if self.player:
-                if player_rect.colliderect(self.rect.x + 47 + x_sup, self.rect.y + 55 + y_sup, self.width, self.height):
-                    if not self.animation == 1:
+                player_rect = pygame.Rect(self.player.rect.x + 30 + x_sup - 20, self.player.rect.y + 10 + y_sup, self.player.width + 40, self.player.height)
+
+            if self.player:
+                #check collision with sword
+                if self.player.animation == 4 and not self.immunity_counter and self.player.index_attack == 2 and self.dammage_possible == True:
+                    if self.player.direction == 1:
+                        sword_rect = pygame.Rect(self.player.rect.x + x_sup + 50, self.player.rect.y + y_sup - 10, self.player.width + 30, self.player.height + 40)
+                        for i in range(10):
+                            if sword_rect.colliderect(self.rect.x + 47 + x_sup, self.rect.y + 55 + y_sup, self.width, self.height) and self.dammage_possible == True:
+                                self.rect.x += 4
+                                self.immunity_counter = 20
+                                self.life_remove += self.player.dammage
+                                self.text_animation.add_dammage(self.rect.x + 47, self.rect.y + 55, self.life_remove)
+                                self.dammage_possible = False
+                                for tile in transparent_tile:
+                                    if tile[1].colliderect(self.rect.x + 47 + x_sup, self.rect.y + 55 + y_sup, self.width, self.height):
+                                        self.rect.x -= 4
+                    else:
+                        sword_rect = pygame.Rect(self.player.rect.x + x_sup - 20, self.player.rect.y + y_sup - 10, self.player.width + 30, self.player.height + 40)
+                        for i in range(10):
+                            if sword_rect.colliderect(self.rect.x + 47 + x_sup, self.rect.y + 55 + y_sup, self.width, self.height) and self.dammage_possible == True:
+                                self.rect.x -= 4
+                                self.immunity_counter = 20
+                                self.life_remove += self.player.dammage
+                                self.text_animation.add_dammage(self.rect.x + 47, self.rect.y + 40, self.life_remove)
+                                self.dammage_possible = False
+                                for tile in transparent_tile:
+                                    if tile[1].colliderect(self.rect.x + 47 + x_sup, self.rect.y + 55 + y_sup, self.width, self.height):
+                                        self.rect.x += 4
+
+            if not self.immunity_counter > 0:
+                if self.animation == 0:
+                    self.idle_counter += 1
+
+                if self.animation == 1:
+                    self.attack_counter += 1
+
+                if self.player:
+                    if player_rect.colliderect(self.rect.x + 47 + x_sup, self.rect.y + 55 + y_sup, self.width, self.height):
+                        if not self.animation == 1:
+                            self.attack_index = 0
+                            self.attack_counter = 0
+                            self.animation = 1
+
+                    else:
+                        if self.animation == 1:
+                            self.animation = 0
+                        self.rect.x += self.move_direction
+                        for tile in transparent_tile:
+                            if tile[1].colliderect(self.rect.x + 47 + x_sup, self.rect.y + 55 + y_sup, self.width, self.height):
+                                self.move_direction *= -1
+
+                if self.idle_counter > self.walk_cooldown and self.animation == 0:
+                    self.idle_counter = 0
+                    self.idle_index += 1
+                    if self.idle_index >= len(self.image_right):
+                        self.idle_index = 0
+                    if self.move_direction > 0:
+                        self.image = self.image_right[self.idle_index]
+                    elif self.move_direction < 1:
+                        self.image = self.image_left[self.idle_index]
+
+                elif self.attack_counter > self.attack_cooldown and self.animation == 1:
+                    self.attack_counter = 0
+                    self.attack_index += 1
+                    if self.attack_index >= len(self.image_attack_right):
                         self.attack_index = 0
-                        self.attack_counter = 0
-                        self.animation = 1
+                    if (self.player.rect.x + 30 + x_sup + (self.player.width // 2)) <= (self.rect.x + x_sup + (self.rect.width // 2)):
+                        self.image = self.image_attack_right[self.attack_index]
+                    elif (self.player.rect.x + 30 + x_sup + (self.player.width // 2)) > (self.rect.x + x_sup + (self.rect.width // 2)):
+                        self.image = self.image_attack_left[self.attack_index]
 
-                else:
-                    if self.animation == 1:
-                        self.animation = 0
-                    self.rect.x += self.move_direction
-                    for tile in transparent_tile:
-                        if tile[1].colliderect(self.rect.x + 47 + x_sup, self.rect.y + 55 + y_sup, self.width, self.height):
-                            self.move_direction *= -1
+                if self.attack_index == 10:
+                    self.player.take_dammage(10, 50)
 
-            if self.idle_counter > self.walk_cooldown and self.animation == 0:
-                self.idle_counter = 0
-                self.idle_index += 1
-                if self.idle_index >= len(self.image_right):
-                    self.idle_index = 0
+            if self.animation == 2:
+                self.dead_counter += 1
+
+            if self.dead_counter > self.dead_cooldown and self.animation == 2:
+                self.dead_counter = 0
+                self.dead_index += 1
                 if self.move_direction > 0:
-                    self.image = self.image_right[self.idle_index]
+                    self.image = self.image_dead_right[self.dead_index]
                 elif self.move_direction < 1:
-                    self.image = self.image_left[self.idle_index]
+                    self.image = self.image_dead_left[self.dead_index]
 
-            elif self.attack_counter > self.attack_cooldown and self.animation == 1:
-                self.attack_counter = 0
-                self.attack_index += 1
-                if self.attack_index >= len(self.image_attack_right):
-                    self.attack_index = 0
-                if (self.player.rect.x + 30 + x_sup + (self.player.width // 2)) <= (self.rect.x + x_sup + (self.rect.width // 2)):
-                    self.image = self.image_attack_right[self.attack_index]
-                elif (self.player.rect.x + 30 + x_sup + (self.player.width // 2)) > (self.rect.x + x_sup + (self.rect.width // 2)):
-                    self.image = self.image_attack_left[self.attack_index]
+            if self.visible:
+                self.screen.blit(self.image, ((self.rect.x + x_sup), (self.rect.y + y_sup)))
 
-            if self.attack_index == 10:
-                self.player.take_dammage(10, 50)
+            self.lifebar.update((self.rect.x + x_sup + 47), (self.rect.y + y_sup + 55), self.life, self.life_base)
 
-        if self.animation == 2:
-            self.dead_counter += 1
+            self.text_animation.update(x_sup, y_sup)
 
-        if self.dead_counter > self.dead_cooldown and self.animation == 2:
-            self.dead_counter = 0
-            self.dead_index += 1
-            if self.move_direction > 0:
-                self.image = self.image_dead_right[self.dead_index]
-            elif self.move_direction < 1:
-                self.image = self.image_dead_left[self.dead_index]
-
-        if self.visible:
-            self.screen.blit(self.image, ((self.rect.x + x_sup), (self.rect.y + y_sup)))
-
-        self.lifebar.update((self.rect.x + x_sup + 47), (self.rect.y + y_sup + 55), self.life, self.life_base)
-
-        self.text_animation.update(x_sup, y_sup)
-
-        if cheat:
-            pygame.draw.rect(self.screen, (255, 255, 255), player_rect, 2)
-            pygame.draw.rect(self.screen, (0, 0, 0), (self.rect.x + 47 + x_sup, self.rect.y + 55 + y_sup, self.width, self.height), 2)
+            if cheat:
+                pygame.draw.rect(self.screen, (255, 255, 255), player_rect, 2)
+                pygame.draw.rect(self.screen, (0, 0, 0), (self.rect.x + 47 + x_sup, self.rect.y + 55 + y_sup, self.width, self.height), 2)
 
     def alive(self):
         if not self.is_alive:
