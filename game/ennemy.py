@@ -5,10 +5,9 @@ import copy
 from game import text_animation
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self, x, y, screen, player = False):
+    def __init__(self, x, y, screen, player = False, color = "Normal"):
         pygame.sprite.Sprite.__init__(self)
-        color = ["Blue", "Normal", "Red"]
-        color = random.choice(color)
+        # color = ["Blue", "Normal", "Red"]
         color2 = color
         if color2 == "Normal": color2 = ""
         self.image_right = []
@@ -197,3 +196,88 @@ class Enemy(pygame.sprite.Sprite):
         if not self.is_alive:
             return self
         else: return False
+
+
+
+class Skeleton(pygame.sprite.Sprite):
+    def __init__(self, x, y, screen, player = False):
+        pygame.sprite.Sprite.__init__(self)
+        self.screen = screen
+
+        self.walk_img = []
+        self.walk_index = 0
+        self.walk_counter = 0
+        self.walk_cooldown = 5
+        for i in range(1, 6):
+            img_right = pygame.image.load(f"img\skeleton_sword/walk_{i}.png")
+            img_right = pygame.transform.scale(img_right, (120, 120))
+            self.walk_img.append([img_right, pygame.transform.flip(img_right, True, False)])
+
+        self.atk_img = []
+        self.atk_index = 0
+        self.atk_counter = 0
+        self.atk_cooldown = 5
+        self.atk_num = 0
+        for i in range(1, 2):
+            atk_img = []
+            for i2 in range(1, 6):
+                img_right = pygame.image.load(f"img\skeleton_sword/attack{i}_{i2}.png")
+                img_right = pygame.transform.scale(img_right, (184, 140))
+                atk_img.append([img_right, pygame.transform.flip(img_right, True, False)])
+            self.atk_img.append(atk_img)
+
+        self.animation = 0
+        self.rect = self.walk_img[0][0].get_rect()
+        self.rect.x = x
+        self.rect.y = y
+        self.player = player
+        self.rect.width -= 60
+        self.rect.height -= 41
+        self.img = self.walk_img[self.walk_index][0]
+        self.direction = 0
+        self.speed = 3
+
+    def update(self, x_sup, y_sup, cheat):
+        rect = copy.deepcopy(self.rect)
+        rect.x += x_sup
+
+        if self.player:
+            see = self.player.hide_box(rect)
+        else: see = "create"
+
+        if see == True:
+
+            if self.rect.centerx < self.player.rect.centerx:
+                self.direction = 0
+                if self.animation == 0:
+                    self.rect.x += self.speed
+            if self.rect.centerx > self.player.rect.centerx:
+                self.direction = 1
+                if self.animation == 0:
+                    self.rect.x -= self.speed
+
+            if self.animation == 0:
+                self.walk_counter += 1
+                if self.walk_counter > self.walk_cooldown:
+                    self.walk_counter = 0
+                    self.walk_index += 1
+                    if self.walk_index >= len(self.walk_img):
+                        self.walk_index = 0
+                self.img = self.walk_img[self.walk_index][self.direction]
+
+            if self.animation == 1:
+                self.atk_counter += 1
+                if self.atk_counter > self.atk_cooldown:
+                    self.atk_counter = 0
+                    self.atk_index += 1
+                    if self.atk_index >= len(self.atk_img[self.atk_num]):
+                        self.atk_index = 0
+                self.img = self.atk_img[self.atk_num][self.atk_index][self.direction]
+
+        if see == True or see == "create":
+            self.screen.blit(self.img, rect)
+            rect.x += 30
+            rect.y += 30
+            if rect.colliderect(self.player.rect.x + x_sup + 30 - 50, self.player.rect.y + y_sup + 10, self.player.width + 100, self.player.height):
+                self.animation = 1
+            else: self.animation = 0

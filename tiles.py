@@ -6,7 +6,10 @@ class load_tiles():
         self.obj = []
         self.obj.append([pygame.image.load("img\coin\Coin-1.png.png"), "obj/1"])
         self.obj.append([pygame.image.load("img\SlimeAnimations/Slime.png"), "obj/2"])
-        self.obj.append([pygame.image.load("img/transparent.png"), "obj/3"])
+        self.obj.append([pygame.image.load("img/transparent.png"), "obj/3/1"]),
+        self.obj.append([pygame.image.load("img/transparent.png"), "obj/3/2"]),
+        self.obj.append([pygame.image.load("img/transparent.png"), "obj/3/3"]),
+        self.obj.append([pygame.image.load("img\skeleton_sword/ready_1.png"), "obj/4"])
 
         self.pnj = []
         self.pnj.append([pygame.image.load("img/npc\individual sprites\medieval\merchant\merchant_00.png"), "pnj/1"])
