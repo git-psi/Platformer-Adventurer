@@ -35,7 +35,9 @@ class Player():
         self.counter_attack = 0
         self.cheat_font = pygame.font.Font("font/dogicapixel.ttf", 15)
         self.dammage = 10
-        self.hide_game = pygame.Rect(0, 0, 800, 700)
+        self.hide_game = pygame.Rect(0, 0, 2400, 700)
+        self.attack_delay = 50
+        self.attack_cooldown = 4
 
         for num in range(0, 5):
             img_right = pygame.image.load(f"img/adventurer/adventurer-attack1-0{num}.png")
@@ -131,7 +133,7 @@ class Player():
         idle_cooldown = 5
         jump_cooldown = 2
         fall_cooldown = 3
-        attack_cooldown = 4
+        attack_cooldown = self.attack_cooldown
         right = False
         left = False
         collide_tile = False
@@ -178,7 +180,7 @@ class Player():
                 self.attack_restant -= 1
                 if self.attack_restant == 0:
                     self.attack_restant = 3
-                    self.attack_possibility = 50
+                    self.attack_possibility = self.attack_delay
                 self.attack_choice += 1
                 if self.attack_choice > (len(self.image_attack) - 1):
                     self.attack_choice = 0
@@ -364,12 +366,13 @@ class Player():
             self.lifebar.update(self.rect.x + x_sup + 30, self.rect.y + y_sup, self.life, self.life_max)
 
         #hide box
-        self.hide_game.x = self.rect.x + x_sup - 400 + self.width // 2
+        self.hide_game.x = self.rect.x + x_sup - 1200 + self.width // 2
             
         return x_sup, y_sup
 
     def take_dammage(self, dammage : float, counter):
         if not self.immunity_counter and self.alive == True:
+            print(1)
             dammage = (dammage) * (100 - self.shield)
             dammage = dammage//100
             self.life_remove += dammage
@@ -390,6 +393,8 @@ class Player():
             if not (n % 2) == 0:
                 self.visible = False
             else: self.visible = True
+            if self.immunity_counter == 0:
+                self.life_remove = 0
 
     def hide_box(self, box):
         if self.hide_game.colliderect(box):

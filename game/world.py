@@ -93,10 +93,14 @@ class World():
         for row in self.world_data:
             col_count = 0
             for tile in row:
-                if tile == "obj/2":
+                if "obj/2" in str(tile):
+                    color = "Normal"
+                    if tile == "obj/2/1": color = "Normal"
+                    elif tile == "obj/2/2": color = "Blue"
+                    elif tile == "obj/2/3": color = "Red"
                     try:
-                        slime = ennemy.Enemy(col_count * self.tile_size - 41, row_count * self.tile_size - 32, self.screen, self.player)
-                    except: slime = ennemy.Enemy(col_count * self.tile_size - 41, row_count * self.tile_size - 32, self.screen)
+                        slime = ennemy.Enemy(col_count * self.tile_size - 41, row_count * self.tile_size - 32, self.screen, self.player, color=color)
+                    except: slime = ennemy.Enemy(col_count * self.tile_size - 41, row_count * self.tile_size - 32, self.screen, color=color)
                     self.slime_group.add(slime)
                 if tile == "obj/4":
                     try:

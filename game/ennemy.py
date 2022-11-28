@@ -7,9 +7,25 @@ from game import text_animation
 class Enemy(pygame.sprite.Sprite):
     def __init__(self, x, y, screen, player = False, color = "Normal"):
         pygame.sprite.Sprite.__init__(self)
-        # color = ["Blue", "Normal", "Red"]
         color2 = color
-        if color2 == "Normal": color2 = ""
+
+        if color2 == "Normal":
+            color2 = ""
+            self.life_base = random.randint(30, 50)
+            self.life = copy.deepcopy(self.life_base)
+            self.dammage = 10
+            self.attack_cooldown = 2
+        if color == "Blue":
+            self.life_base = random.randint(50, 80)
+            self.life = copy.deepcopy(self.life_base)
+            self.dammage = 20
+            self.attack_cooldown = 2
+        if color == "Red":
+            self.life_base = random.randint(80, 120)
+            self.life = copy.deepcopy(self.life_base)
+            self.dammage = 30
+            self.attack_cooldown = 1
+        
         self.image_right = []
         self.image_left = []
         self.image_attack_right = []
@@ -55,13 +71,10 @@ class Enemy(pygame.sprite.Sprite):
         self.height = self.image.get_height() - 55
         self.animation = 0
         self.walk_cooldown = 4
-        self.attack_cooldown = 1
         self.dead_cooldown = 1
         self.player = player
         self.immunity_counter = 0
         self.visible = True
-        self.life_base = random.randint(30, 50)
-        self.life = copy.deepcopy(self.life_base)
         self.life_remove = 0
         self.dammage_possible = True
         self.is_alive = True
@@ -157,7 +170,7 @@ class Enemy(pygame.sprite.Sprite):
                     elif self.move_direction < 1:
                         self.image = self.image_left[self.idle_index]
 
-                elif self.attack_counter > self.attack_cooldown and self.animation == 1:
+                elif self.attack_counter >= self.attack_cooldown and self.animation == 1:
                     self.attack_counter = 0
                     self.attack_index += 1
                     if self.attack_index >= len(self.image_attack_right):
@@ -168,7 +181,7 @@ class Enemy(pygame.sprite.Sprite):
                         self.image = self.image_attack_left[self.attack_index]
 
                 if self.attack_index == 10:
-                    self.player.take_dammage(10, 50)
+                    self.player.take_dammage(self.dammage, 50)
 
             if self.animation == 2:
                 self.dead_counter += 1
@@ -204,36 +217,52 @@ class Skeleton(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.screen = screen
 
-        self.walk_img = []
-        self.walk_index = 0
-        self.walk_counter = 0
-        self.walk_cooldown = 5
-        for i in range(1, 6):
-            img_right = pygame.image.load(f"img\skeleton_sword/walk_{i}.png")
-            img_right = pygame.transform.scale(img_right, (120, 120))
-            self.walk_img.append([img_right, pygame.transform.flip(img_right, True, False)])
+        self.idle_img = []
+        self.idle_index = 0
+        self.idle_counter = 0
+        self.idle_cooldown = 3
+        for img_x in range(0, 4):
+            img_right = self.get_image(img_x*100, 0)
+            img_right = pygame.transform.scale(img_right, (170, 170))
+            self.idle_img.append([img_right, pygame.transform.flip(img_right, True, False)])
+
+        self.glowing_img = []
+        self.glowing_index = 0
+        self.glowing_counter = 0
+        self.glowing_cooldown = 3
+        for img_x in range(0, 8):
+            img_right = self.get_image(img_x*100, 100)
+            img_right = pygame.transform.scale(img_right, (170, 170))
+            self.glowing_img.append([img_right, pygame.transform.flip(img_right, True, False)])
 
         self.atk_img = []
         self.atk_index = 0
         self.atk_counter = 0
-        self.atk_cooldown = 5
-        self.atk_num = 0
-        for i in range(1, 2):
-            atk_img = []
-            for i2 in range(1, 6):
-                img_right = pygame.image.load(f"img\skeleton_sword/attack{i}_{i2}.png")
-                img_right = pygame.transform.scale(img_right, (184, 140))
-                atk_img.append([img_right, pygame.transform.flip(img_right, True, False)])
-            self.atk_img.append(atk_img)
+        self.atk_cooldown = 3
+        #main attack
+        # for img_x in range(0, 8):
+        #     img_right = self.get_image(img_x*100, 200)
+        #     img_right = pygame.transform.scale(img_right, (170, 170))
+        #     self.atk_img.append([img_right, pygame.transform.flip(img_right, True, False)])
+        #melee attack
+        for img_x in range(0, 7):
+            img_right = self.get_image(img_x*100, 400)
+            img_right = pygame.transform.scale(img_right, (170, 170))
+            self.atk_img.append([img_right, pygame.transform.flip(img_right, True, False)])
+        #laser attack
+        # for img_x in range(0, 7):
+        #     img_right = self.get_image(img_x*100, 500)
+        #     img_right = pygame.transform.scale(img_right, (170, 170))
+        #     self.atk_img.append([img_right, pygame.transform.flip(img_right, True, False)])
 
         self.animation = 0
-        self.rect = self.walk_img[0][0].get_rect()
+        self.rect = self.idle_img[0][0].get_rect()
         self.rect.x = x
         self.rect.y = y
         self.player = player
-        self.rect.width -= 60
-        self.rect.height -= 41
-        self.img = self.walk_img[self.walk_index][0]
+        self.rect.width -= 70
+        self.rect.height -= 80
+        self.img = self.idle_img[self.idle_index][0]
         self.direction = 0
         self.speed = 3
 
@@ -256,28 +285,48 @@ class Skeleton(pygame.sprite.Sprite):
                 if self.animation == 0:
                     self.rect.x -= self.speed
 
+            #idle animation
             if self.animation == 0:
-                self.walk_counter += 1
-                if self.walk_counter > self.walk_cooldown:
-                    self.walk_counter = 0
-                    self.walk_index += 1
-                    if self.walk_index >= len(self.walk_img):
-                        self.walk_index = 0
-                self.img = self.walk_img[self.walk_index][self.direction]
+                self.idle_counter += 1
+                if self.idle_counter > self.idle_cooldown:
+                    self.idle_counter = 0
+                    self.idle_index += 1
+                    if self.idle_index >= len(self.idle_img):
+                        self.idle_index = 0
+                self.img = self.idle_img[self.idle_index][self.direction]
 
-            if self.animation == 1:
+            #atk annimation
+            elif self.animation == 1:
                 self.atk_counter += 1
                 if self.atk_counter > self.atk_cooldown:
                     self.atk_counter = 0
                     self.atk_index += 1
-                    if self.atk_index >= len(self.atk_img[self.atk_num]):
+                    if self.atk_index >= len(self.atk_img):
                         self.atk_index = 0
-                self.img = self.atk_img[self.atk_num][self.atk_index][self.direction]
+                self.img = self.atk_img[self.atk_index][self.direction]
+
+            #glowing animation
+            elif self.animation == 2:
+                self.glowing_counter += 1
+                if self.glowing_counter > self.glowing_cooldown:
+                    self.glowing_counter = 0
+                    self.glowing_index += 1
+                    if self.glowing_index >= len(self.glowing_img):
+                        self.glowing_index = 0
+                self.img = self.glowing_img[self.glowing_index][self.direction]
 
         if see == True or see == "create":
             self.screen.blit(self.img, rect)
-            rect.x += 30
-            rect.y += 30
-            if rect.colliderect(self.player.rect.x + x_sup + 30 - 50, self.player.rect.y + y_sup + 10, self.player.width + 100, self.player.height):
+            rect.x += 35
+            rect.y += 35
+            if rect.colliderect(self.player.rect):
                 self.animation = 1
             else: self.animation = 0
+            if cheat:
+                pygame.draw.rect(self.screen, (0, 0, 0), rect, 4)
+
+    def get_image(self, x, y):
+        image = pygame.Surface([100, 100])
+        image.blit(pygame.image.load("img\Mecha-stone Golem 0.1\PNG sheet\Character_sheet.png"), (0, 0), (x, y, 100, 100))
+        image.set_colorkey([0, 0, 0])
+        return image

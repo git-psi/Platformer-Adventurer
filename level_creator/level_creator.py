@@ -204,7 +204,7 @@ while run:
                 world_data[y][x] = tile_num
                 if str(tile_num) == "obj/1":
                     world.calculate_coin()
-                if str(tile_num) == "obj/2" or str(tile_num) == "obj/4":
+                if "obj/2" in str(tile_num) or str(tile_num) == "obj/4":
                     world.calculate_ennemy()
                 elif "pnj" in tile_num:
                     world.calculate_pnj()

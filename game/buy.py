@@ -29,11 +29,18 @@ class Buy():
         ]
         self.max_health_index = 0
 
+        self.attack_velocity = [(pygame.transform.scale(pygame.image.load("img\Kyrise's 16x16 RPG Icon Pack - V1.3\icons/48x48/book_03d.png"), (40, 40)), "Attack Velocity : Level 2", 10, 40, 4),
+            (pygame.transform.scale(pygame.image.load("img\Kyrise's 16x16 RPG Icon Pack - V1.3\icons/48x48/book_03d.png"), (40, 40)), "Attack Velocity : Level 3", 11, 40, 3),
+            (pygame.transform.scale(pygame.image.load("img\Kyrise's 16x16 RPG Icon Pack - V1.3\icons/48x48/book_03d.png"), (40, 40)), "Attack Velocity : Level 4", 12, 10, 3)
+        ]
+        self.attack_velocity_index = 0
+
 
         self.objs = [] #(obj : pygame.image, name : str, price : int)
         self.objs.append(self.sword[self.sword_index])
         self.objs.append(self.shield[self.shield_index])
         self.objs.append(self.max_health[self.max_health_index])
+        self.objs.append(self.attack_velocity[self.attack_velocity_index])
         self.objs.append((pygame.transform.scale(pygame.image.load("img\Kyrise's 16x16 RPG Icon Pack - V1.3\icons/48x48\potion_01a.png"), (40, 40)), "Regeneration Of Life : 10%", 10, 10))
         self.objs.append((pygame.transform.scale(pygame.image.load("img\Kyrise's 16x16 RPG Icon Pack - V1.3\icons/48x48/book_02c.png"), (40, 40)), "Xp Boost : +10xp", 10, 10))
 
@@ -88,7 +95,6 @@ class Buy():
                             else: self.objs.pop(obj_num - 1)
 
                         if "Regeneration Of Life" in obj[1]:
-                            print(1)
                             sup_life = obj[3] * self.player.life_max // 100
                             if sup_life + self.player.life > self.player.life_max:
                                 sup_life = self.player.life_max - self.player.life
@@ -100,6 +106,14 @@ class Buy():
                             self.max_health_index += 1
                             if not self.max_health_index >= len(self.max_health):
                                 self.objs[obj_num - 1] = self.max_health[self.max_health_index]
+                            else: self.objs.pop(obj_num - 1)
+
+                        if "Attack Velocity" in obj[1]:
+                            self.player.attack_delay = obj[3]
+                            self.player.attack_cooldown = obj[4]
+                            self.attack_velocity_index += 1
+                            if not self.attack_velocity_index >= len(self.attack_velocity):
+                                self.objs[obj_num - 1] = self.attack_velocity[self.attack_velocity_index]
                             else: self.objs.pop(obj_num - 1)
 
                         if "Xp Boost" in obj[1]:
