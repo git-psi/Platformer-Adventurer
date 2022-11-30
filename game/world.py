@@ -38,7 +38,6 @@ class World():
         #load groups
         self.coin_group = pygame.sprite.Group()
         self.slime_group = pygame.sprite.Group()
-        self.skelton_group = pygame.sprite.Group()
         self.pnj_group = pygame.sprite.Group()
 
     def calculate_tile(self, rect = False):
@@ -88,7 +87,6 @@ class World():
     
     def calculate_ennemy(self):
         self.slime_group.empty()
-        self.skelton_group.empty()
         row_count = 0
         for row in self.world_data:
             col_count = 0
@@ -102,11 +100,6 @@ class World():
                         slime = ennemy.Enemy(col_count * self.tile_size - 41, row_count * self.tile_size - 32, self.screen, self.player, color=color)
                     except: slime = ennemy.Enemy(col_count * self.tile_size - 41, row_count * self.tile_size - 32, self.screen, color=color)
                     self.slime_group.add(slime)
-                if tile == "obj/4":
-                    try:
-                        skeleton = ennemy.Skeleton(col_count * self.tile_size - 33, row_count * self.tile_size - 55, self.screen, self.player)
-                    except: skeleton = ennemy.Skeleton(col_count * self.tile_size - 33, row_count * self.tile_size - 55, self.screen)
-                    self.skelton_group.add(skeleton)
                 col_count += 1
             row_count += 1
 
@@ -205,8 +198,6 @@ class World():
                 if self.player.hide_box(rect):
                     pnj.update(x_sup)
         else: self.pnj_group.update(x_sup)
-
-        self.skelton_group.update(x_sup, y_sup, cheat)
         
 
 def world_data_function():

@@ -309,7 +309,6 @@ class Player():
 
             #check move background
             if not collide_tile:
-                max_x_player = max_x_player
                 if self.rect.x >= 600 and self.rect.x <= max_x_player and right:
                     x_sup -= 10
                 if self.rect.x <= max_x_player and self.rect.x >= 600 and left:

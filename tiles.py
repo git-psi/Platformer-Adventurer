@@ -9,10 +9,6 @@ class load_tiles():
         self.obj.append([pygame.image.load("img\SlimeAnimations/SlimeBlue.png"), "obj/2/2"])
         self.obj.append([pygame.image.load("img\SlimeAnimations/SlimeRed.png"), "obj/2/3"])
         self.obj.append([pygame.image.load("img/transparent.png"), "obj/3"])
-        image = pygame.Surface([100, 100])
-        image.blit(pygame.image.load("img\Mecha-stone Golem 0.1\PNG sheet\Character_sheet.png"), (0, 0), (0, 0, 100, 100))
-        image.set_colorkey([0, 0, 0])
-        self.obj.append([image, "obj/4"])
 
         self.pnj = []
         self.pnj.append([pygame.image.load("img/npc\individual sprites\medieval\merchant\merchant_00.png"), "pnj/1"])
